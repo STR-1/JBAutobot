@@ -1962,7 +1962,7 @@ function RunAutoBot(Player, Message)
 		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(cmds1))
 
 		local cmds2 = {
-			[1] = ">Add Levels [Player's Display Name] [Number], >Force AutoSlotsWin, >Create Giveaway [Item], >Select Winner.",
+			[1] = ">Add Levels [Player's Display Name] [Number], >Change Servers, >Rejoin Server, >Force AutoSlotsWin, >Create Giveaway [Item], >Select Winner.",
 			[2] = "All"
 		}
 		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(cmds2))
