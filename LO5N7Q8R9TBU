@@ -1801,7 +1801,7 @@ function RunAutoBot(Player, Message)
 		}
 		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(nextopenargs))
 
-	elseif Message:lower():match(">create giveaway") and table.find(Managers, Player.UserId) then
+	elseif Message:lower():match(">create giveaway") and not Message:lower():match("autoslotswin,") and table.find(Managers, Player.UserId) then
 		if _G.GiveawayActive == true then
 			local cannotstartargs = {
 				[1] = "A giveaway is already running, select a winner before starting another giveaway!",
@@ -1823,7 +1823,7 @@ function RunAutoBot(Player, Message)
 			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(started))
 		end
 
-	elseif Message:lower():match(">select winner") and table.find(_G.Data["Managers"], Player.UserId) then
+	elseif Message:lower():match(">select winner") and not Message:lower():match("autoslotswin,") and table.find(_G.Data["Managers"], Player.UserId) then
 		local ChosenPlayer = _G.PlayersInGiveaway[math.random(1, #_G.PlayersInGiveaway)]
 
 		local ended = {
@@ -1953,6 +1953,19 @@ function RunAutoBot(Player, Message)
 			[2] = "All"
 		}
 		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(levelrewards))
+
+    elseif Message:lower() == ">manager commands" and table.find(_G.Data["Managers"], Player.UserId) then
+		local cmds1 = {
+			[1] = "Autobot Manager Commands: >Blacklist [Player's Display Name] [Reason], >Whitelist [Players's Display Name] [Reason], >Set Level [Player's Display Name] [Number], ",
+			[2] = "All"
+		}
+		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(cmds1))
+
+		local cmds2 = {
+			[1] = ">Add Levels [Player's Display Name] [Number], >Force AutoSlotsWin, >Create Giveaway [Item], >Select Winner.",
+			[2] = "All"
+		}
+		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(cmds2))
 	end
 
 	if not table.find(_G.Blacklist, Player.UserId) and _G.GiveawayActive == true and not table.find(_G.PlayersInGiveaway, Player.DisplayName) and Message:lower() == ">enter" then
