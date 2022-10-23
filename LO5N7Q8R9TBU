@@ -1956,7 +1956,7 @@ function RunAutoBot(Player, Message)
 
     elseif Message:lower() == ">manager commands" and table.find(_G.Data["Managers"], Player.UserId) then
 		local cmds1 = {
-			[1] = "Autobot Manager Commands: >Blacklist [Player's Display Name] [Reason], >Whitelist [Players's Display Name] [Reason], >Set Level [Player's Display Name] [Number],",
+			[1] = "Autobot Manager Commands: >Blacklist [Player's Display Name] [Reason], >Whitelist [Players's Display Name], >Set Level [Player's Display Name] [Number],",
 			[2] = "All"
 		}
 		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(cmds1))
