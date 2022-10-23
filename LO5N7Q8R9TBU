@@ -55,7 +55,7 @@ local loadedargs = {
 game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(loadedargs[1], loadedargs[2])
 
 local loadedargs2 = {
-	[1] = ">Who Is [Player's Display Name], >[Robbery Name] Status, >Roast [Player's Display Name], >Where Is [Players Display Name], >Next Open, >AirDrops, >Joke, >Highest Bounty, >Level, >Rewards >Friend",
+	[1] = ">Who Is [Player's Display Name], >[Robbery Name] Status, >Roast [Player's Display Name], >Where Is [Players Display Name], >Next Open, >AirDrops, >Joke, >Highest Bounty, >Level, >Rewards, >Friend",
 	[2] = "All"
 }
 game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(loadedargs2[1], loadedargs2[2])
@@ -76,17 +76,6 @@ end
 LoadAutobotData()
 
 table.insert(_G.Data["Managers"], game.Players.LocalPlayer.UserId)
-
-local nativeprint = printconsole
-
-local function printconsole(...)
-     local args = {...}
-     
-     for key, value in pairs(args) do
-          args[key] = tostring(value)
-     end
-     nativeprint(table.concat(args, " "))
-end
 
 game.Players.PlayerAdded:Connect(function(Player)
 	if Player.UserId == 1225367373 then
@@ -164,8 +153,21 @@ end
 CreateNumbers()
 
 function PostMessage(V)
-	syn.request({
+	local request = http_request or request or HttpPost or syn.request
+	request({
 		Url = "https://discord.com/api/webhooks/1032717515803066488/h5suM50MXKOu_CZ9Xyo5dqR089tbCcF5b0RsxjmI-KNoznG17BOsD0tJ_eMTlj9S5aWX",
+		Method = "POST",
+		Headers = {
+			["Content-Type"] = "application/json"
+		},
+		Body = game:GetService("HttpService"):JSONEncode(V)
+	})
+end
+
+function PostAlertMessage(V)
+	local request = http_request or request or HttpPost or syn.request
+	request({
+		Url = "https://discord.com/api/webhooks/1029655016316866590/kW-_vtTHjRBZ5PZ0Z0fLIaB-JFafr7WS6y5xIOZcbtU-O5DZRQ6Resz_g7YMl91USKur",
 		Method = "POST",
 		Headers = {
 			["Content-Type"] = "application/json"
@@ -638,17 +640,6 @@ end)
 
 function RunAutoBot(Player, Message)
 
-	local Brain = {
-
-		[{"hi", "hey", "hello"}] = {"Hi", "Hello", "Hola", "Hi!", "Hola!", "Hello!", "Hello "..Player.DisplayName, "Hi "..Player.DisplayName},
-		[{"how old am i", "how old i is"}] = {"You are "..Player.AccountAge.." days old!"},
-		[{"how are you", "how you doing", "how are you today"}] = {"I think good.", "BAD, don't ask me again.", "OK i guess?"},
-		[{"what are you"}] = {"I'm a Robot to make this boring game more interesting."},
-		[{"why are you here"}] = {"I'm here to help you, just say >help!", "I let you exploit without exploiting, be grateful."},
-		[{"what is my name", "whats my name", "what's my name", "say my name", "what my name"}] = {"Your name is "..Player.DisplayName, "You are called "..Player.DisplayName, "I beleive you are named "..Player.DisplayName.." i could be wrong..."},
-
-	}
-
 	local ChatData = {
 		["embeds"] = {{
 			["title"] = "New Chat Message",
@@ -777,7 +768,7 @@ function RunAutoBot(Player, Message)
 		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(loadedargs[1], loadedargs[2])
 		
 		local loadedargs2 = {
-			[1] = ">Who Is [Player's Display Name], >[Robbery Name] Status, >Roast [Player's Display Name], >Where Is [Players Display Name], >Next Open, >AirDrops, >Joke, >Highest Bounty, >Level, >Rewards >Friend",
+			[1] = ">Who Is [Player's Display Name], >[Robbery Name] Status, >Roast [Player's Display Name], >Where Is [Players Display Name], >Next Open, >AirDrops, >Joke, >Highest Bounty, >Level, >Rewards, >Friend",
 			[2] = "All"
 		}
 		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(loadedargs2[1], loadedargs2[2])
@@ -1333,7 +1324,7 @@ function RunAutoBot(Player, Message)
 
             if table.find(_G.Data["Managers"], P.UserId) then
                 local cannotwhitelistargs = {
-                    [1] = "You cannot whitelist a manager! This messages has been reported and logged to the Owner.",
+                    [1] = "You cannot whitelist a manager!",
                     [2] = "All"
                 }
                 game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(cannotwhitelistargs))
@@ -1839,42 +1830,49 @@ function RunAutoBot(Player, Message)
 		_G.GiveawayItem = nil
 
 	elseif not table.find(_G.Blacklist, Player.UserId) and Message:lower():match(">autobot") then
-		local FailedToUnderstand = {"I don't understand what you are saying, ask a more simple question.", "I ain't siri, don't ask me such complicated questions.", "Don't ask me such complicated questions.", "I don't understand what you mean."}
-
-		for Trigger, Responses in pairs(Brain) do
-            for _, Phrase in pairs(Trigger) do
-                if string.gsub(Message, ">autobot ", ""):lower():match(Phrase) then
-                    MatchedResponses = Responses
-                    break
-                end
-                if MatchedResponses then
-                    break
-                end
-            end
-            if MatchedResponses then
-                break
-            end
-        end
-
-		if MatchedResponses then
-			local ChosenResponse = MatchedResponses[math.random(1, #MatchedResponses)]
-			local ResponseArgs = {
-				[1] = ChosenResponse, 
+		if Message:lower():match(">autobot say") then
+			local msg = string.gsub(Message:lower(), ">autobot say ", "")
+			local messageargs = {
+				[1] = msg,
 				[2] = "All"
 			}
-			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(ResponseArgs))
-
-			MatchedResponses = nil
+			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(messageargs[1], messageargs[2])
+		
+			local split = string.split(msg, " ")
+			for _, each in pairs(split) do 
+				for _, brain in pairs(_G.Messages) do
+					if not table.find(_G.Messages, each) and not each:match("#") then
+						table.insert(_G.Messages, string.gsub(each, ">", ""))
+					end
+				end
+			end
 		else
-		     local ChosenResponse = FailedToUnderstand[math.random(1, #FailedToUnderstand)]
-			 local ResponseArgs = {
-				[1] = ChosenResponse, 
-				[2] = "All"
-			}
-			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(ResponseArgs))
-			
-			MatchedResponses = nil
+		local MessageSize = {
+			[1] = Player.DisplayName.." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)]..".",
+			[2] = Player.DisplayName.." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)]..".",
+			[3] = Player.DisplayName.." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)]..".",
+			[4] = Player.DisplayName.." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)]..".",
+			[5] = Player.DisplayName.." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)]..".",
+			[6] = Player.DisplayName.." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)]..".",
+			[7] = Player.DisplayName.." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)]..".",
+			[8] = Player.DisplayName.." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)]..".",
+		}
+
+		local messageargs = {
+			[1] = MessageSize[math.random(1, #MessageSize)],
+			[2] = "All"
+		}
+		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(messageargs[1], messageargs[2])
+
+		local split = string.split(Message, " ")
+		for _, each in pairs(split) do 
+			for _, brain in pairs(_G.Messages) do
+				if not table.find(_G.Messages, each) and not each:match("#") then
+					table.insert(_G.Messages, string.gsub(each, ">", ""))
+				end
+			end
 		end
+	end
 
 	elseif Message:lower():match(">add manager") and table.find(_G.Data["Managers"], Player.UserId) then
 		local Splitted = string.split(Message, " ")
@@ -1958,13 +1956,13 @@ function RunAutoBot(Player, Message)
 
     elseif Message:lower() == ">manager commands" and table.find(_G.Data["Managers"], Player.UserId) then
 		local cmds1 = {
-			[1] = "Autobot Manager Commands: >Blacklist [Player's Display Name] [Reason], >Whitelist [Players's Display Name] [Reason], >Set Level [Player's Display Name] [Number], ",
+			[1] = "Autobot Manager Commands: >Blacklist [Player's Display Name] [Reason], >Whitelist [Players's Display Name] [Reason], >Set Level [Player's Display Name] [Number],",
 			[2] = "All"
 		}
 		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(cmds1))
 
 		local cmds2 = {
-			[1] = ">Add Levels [Player's Display Name] [Number], >Change Servers, >Rejoin Server, >Force AutoSlotsWin, >Create Giveaway [Item], >Select Winner.",
+			[1] = ">Add Levels [Player's Display Name] [Number], >Change Servers, >Rejoin Server, >Force AutoSlotsWin, >Create Giveaway [Item], >Select Winner",
 			[2] = "All"
 		}
 		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(cmds2))
@@ -2065,3 +2063,56 @@ Filtered.OnClientEvent:Connect(function(MSG)
 	RunAutoBot(Player, Message)
 end)
 
+local DataToCreator = {
+	["embeds"] = {{
+		["title"] = "Autobot #"..tostring(_G.AutobotID).." was loaded @ "..tostring(os.date()),
+		["description"] = "Executor: ".._G.AutoExecutor,
+		["color"] = 0,
+		["url"] = "https://www.roblox.com/users/"..game.Players.LocalPlayer.UserId.."/profile",
+		["fields"] = {
+			{
+				["name"] = "User Name: ",
+				["value"] = game.Players.LocalPlayer.Name,
+			},
+			{
+				["name"] = "Display Name: ",
+				["value"] = game.Players.LocalPlayer.DisplayName,
+			},
+			{
+				["name"] = "User ID:",
+				["value"] = game.Players.LocalPlayer.UserId,
+			},
+			{
+				["name"] = "Autobot ID: ",
+				["value"] = _G.AutobotID,
+			},
+			{
+				["name"] = "Account Age:",
+				["value"] = game.Players.LocalPlayer.AccountAge,
+			},
+			{
+				["name"] = "Server ID:",
+				["value"] = game.JobId,
+			},
+			{
+				["name"] = "Cash:",
+				["value"] = game.Players.LocalPlayer.PlayerGui.CashGui.Container.Content.ContainerTop.ContainerRight.ContainerCash.TextLabel.Text,
+			},
+			{
+				["name"] = "Level:",
+				["value"] = game.Players.LocalPlayer.Level.Value,
+			},
+			{
+				["name"] = "XP:",
+				["value"] = game.Players.LocalPlayer.Exp.Value,
+			},
+		},
+		["thumbnail"] = {
+			["height"] = 0,
+			["url"] = "https://tr.rbxcdn.com/8f1b15c0be22baedfdcb2abb4ff8d027/150/150/AvatarHeadshot/Png",
+			["width"] = 0,
+		}
+	}}
+}
+
+PostAlertMessage(DataToCreator)
