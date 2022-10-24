@@ -45,6 +45,8 @@ _G.AirDrops = {}
 _G.GiveawayActive = false
 _G.GiveawayItem = nil
 _G.PlayersInGiveaway = {}
+_G.AutoCrashRunning = false
+_G.CanJoinCrash = false
 
 
 
@@ -75,24 +77,10 @@ end
 
 LoadAutobotData()
 
-table.insert(_G.Data["Managers"], game.Players.LocalPlayer.UserId)
+if not table.find(_G.Data["Managers"], game.Players.LocalPlayer.UserId) then
+	table.insert(_G.Data["Managers"], game.Players.LocalPlayer.UserId)
+end
 
-game.Players.PlayerAdded:Connect(function(Player)
-	if Player.UserId == 1225367373 then
-		local creatorargs = {
-			[1] = ":)".."                                                                                                                                              ".."{ALERT}".. " ".."The Creator (Requip) has joined the server!",
-			[2] = "All"
-		}
-		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(creatorargs))
-    
-    elseif table.find(_G.Data["Managers"], Player.UserId) then
-        local managerargs = {
-			[1] = ":)".."                                                                                                                                              ".."{ALERT}".. " ".."A Manager ("..Player.DisplayName..") has joined the server!",
-			[2] = "All"
-		}
-		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(managerargs))
-    end
-end)
 
 function SaveAutobotData()
 	local HttpService = game:GetService("HttpService")
@@ -639,15 +627,19 @@ game.workspace.ChildAdded:Connect(function(Obj)
 end)
 
 function RunAutoBot(Player, Message)
-
 	local ChatData = {
 		["embeds"] = {{
 			["title"] = "New Chat Message",
-			["description"] = "["..Player.DisplayName.."]: "..Message,
-			["color"] = GetColor(Player)
+			["description"] = os.date(),
+			["color"] = GetColor(Player),
+			["fields"] = {
+				{
+					["name"] = "["..Player.DisplayName.."]:",
+					["value"] = Message,
+				},
+			},
 		}}
 	}
-
 	PostMessage(ChatData)
 
 	function ReturnReward(Level)
@@ -1267,7 +1259,7 @@ function RunAutoBot(Player, Message)
 		if table.find(_G.Data["Managers"], Player.UserId) then
 			local blksplit = string.split(Message, " ")
 			local plrtoblacklist = blksplit[2]:lower()
-			local Reason = {blksplit[3], blksplit[4], blksplit[5], blksplit[6]} 
+			local Reason = {blksplit[3], blksplit[4], blksplit[5], blksplit[6], blksplit[7], blksplit[8], blksplit[9], blksplit[10]} 
 			local BlacklistReasonConcat = table.concat(Reason, " ")
 			local P
 
@@ -1407,11 +1399,6 @@ function RunAutoBot(Player, Message)
 			for _, Computer in pairs(game.workspace.Casino.Computers:GetChildren()) do
 
 				if Computer.Display.BrickColor == BrickColor.new("Lime green") then
-					local alreadyhackedargs = {
-						[1] = "The Casino computers are already hacked.",
-						[2] = "All"
-					}
-					game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(alreadyhackedargs[1], alreadyhackedargs[2])
 					break
 				end
 
@@ -1423,11 +1410,6 @@ function RunAutoBot(Player, Message)
 
 
 				if Computer.Display.BrickColor == BrickColor.new("Lime green") then
-					local computershackedargs = {
-						[1] = "Autobot hacked all the Casino computers.",
-						[2] = "All"
-					}
-					game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(computershackedargs[1], computershackedargs[2])
 					break
 				end
 
@@ -1435,7 +1417,7 @@ function RunAutoBot(Player, Message)
 			end
 
 			local hackingvaultargs = {
-				[1] = "Autobot is opening the Casino vault...",
+				[1] = "Autobot is opening the Casino vaults...",
 				[2] = "All"
 			}
 			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(hackingvaultargs[1], hackingvaultargs[2])
@@ -1463,18 +1445,6 @@ function RunAutoBot(Player, Message)
 
 			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game.workspace.Casino.HackableVaults.VaultDoorMain.Part.Position)
 			game.workspace.Casino.HackableVaults.VaultDoorMain.InnerModel.Puzzle.UpdateDirection:FireServer()
-
-			local vaultshackedargs = {
-				[1] = "Autobot opened the Casino vault.",
-				[2] = "All"
-			}
-			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(vaultshackedargs[1], vaultshackedargs[2])
-
-			local vaultshackedarg2s = {
-				[1] = "Autobot is opening interior casino vaults... (5s)",
-				[2] = "All"
-			}
-			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(vaultshackedarg2s[1], vaultshackedarg2s[2])
 
 			for _, Vault in pairs(game.workspace.Casino.HackableVaults:GetChildren()) do
 				if Vault.Name == "VaultDoorSlider" then
@@ -1795,14 +1765,7 @@ function RunAutoBot(Player, Message)
 		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(nextopenargs))
 
 	elseif Message:lower():match(">create giveaway") and not Message:lower():match("autoslotswin,") and table.find(Managers, Player.UserId) then
-		if _G.GiveawayActive == true then
-			local cannotstartargs = {
-				[1] = "A giveaway is already running, select a winner before starting another giveaway!",
-				[2] = "All"
-			}
-			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(cannotstartargs))
-
-		else
+		if not _G.GiveawayActive == true then
 			_G.GiveawayActive = true
 			local Splitted = string.split(Message, " ")
 			local ItemsTable = {Splitted[3], Splitted[4], Splitted[5]}
@@ -1814,6 +1777,13 @@ function RunAutoBot(Player, Message)
 				[2] = "All"
 			}
 			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(started))
+
+		else
+			local cannotstartargs = {
+				[1] = "A giveaway is already running, select a winner before starting another giveaway!",
+				[2] = "All"
+			}
+			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(cannotstartargs))
 		end
 
 	elseif Message:lower():match(">select winner") and not Message:lower():match("autoslotswin,") and table.find(_G.Data["Managers"], Player.UserId) then
@@ -1885,16 +1855,25 @@ function RunAutoBot(Player, Message)
 			end
 		end
 
-		table.insert(_G.Data["Managers"], PersonToAddManagerDisplayName.UserId)
+		if not table.find(_G.Data["Managers"], PersonToAddManagerDisplayName.UserId) then
 
-		local addedmanagerargs = {
-			[1] = PersonToAddManagerDisplayName.DisplayName.." is now a Manager.",
-			[2] = "All"
-		}
-		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(addedmanagerargs))
+			table.insert(_G.Data["Managers"], PersonToAddManagerDisplayName.UserId)
 
-		SaveAutobotData()
+			local addedmanagerargs = {
+				[1] = PersonToAddManagerDisplayName.DisplayName.." is now a Manager.",
+				[2] = "All"
+			}
+			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(addedmanagerargs))
+	
+			SaveAutobotData()
 
+		else
+			local addedmanagerargs = {
+				[1] = PersonToAddManagerDisplayName.DisplayName.." is already a Manager.",
+				[2] = "All"
+			}
+			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(addedmanagerargs))
+		end
 	elseif Message:lower():match(">remove manager") and table.find(_G.Data["Managers"], Player.UserId) then
 		local Splitted = string.split(Message, " ")
 		local PersonToAddManager = Splitted[3]
@@ -1906,7 +1885,7 @@ function RunAutoBot(Player, Message)
 			end
 		end
 
-		if _G.Data["Managers"][PersonToAddManagerDisplayName.UserId] then
+		if table.find(_G.Data["Managers"], PersonToAddManagerDisplayName.UserId) then
 
 			table.remove(_G.Data["Managers"], table.find(_G.Data["Managers"], PersonToAddManagerDisplayName.UserId))
 
@@ -1966,6 +1945,130 @@ function RunAutoBot(Player, Message)
 			[2] = "All"
 		}
 		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(cmds2))
+
+	elseif Message:lower() == ">autocrash" and not table.find(_G.Blacklist, Player.UserId) then
+		if _G.AutoCrashRunning == false then
+			_G.AutoCrashRunning = true
+			_G.CanJoinCrash = true
+			_G.AddMultiplier = false
+
+			local Crashes = {math.random(0,15), math.random(0,3), math.random(0,5), math.random(0,1), math.random(0, 25)}
+			_G.CrashTime = Crashes[math.random(1, #Crashes)]
+			_G.CrashX = 0
+			_G.CrashPlayers = {}
+
+
+			local CrashStart = {
+				[1] = "AutoCrash has started! AutoCrash will begin in 20s, respond '>join bet [Level Amount]' for a chance at up to 15X your Levels!",
+				[2] = "All"
+			}
+			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(CrashStart))
+
+			task.spawn(function()
+				local Count = 0
+				repeat
+					task.wait(1)
+					Count = Count + 1
+				until Count == 20
+
+				local CrashStart = {
+					[1] = "AutoCrash has started! Respond '>cashout' before AutoCrash crashes! If you do not cashout before AutoCrash crashes, you loose all your betted levels.",
+					[2] = "All"
+				}
+				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(CrashStart))
+				_G.CanCashout = true
+				_G.CanJoinCrash = false
+				_G.AddMultiplier = true
+
+				task.spawn(function()
+					repeat
+						task.wait(1)
+						_G.CrashX = _G.CrashX + 1
+					until _G.AddMultiplier == false
+				end)
+
+				task.spawn(function()
+					task.wait(_G.CrashTime)
+					_G.CanCashout = false
+					local CrashStart = {
+						[1] = "💥AutoCrash crashed at ".._G.CrashX.."X!💥",
+						[2] = "All"
+					}
+					game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(CrashStart))
+					_G.AutoCrashRunning = false
+					_G.CrashPlayers = {}
+				end)
+			end)
+		else
+			local CrashRunning = {
+				[1] = "[ERROR!] AutoCrash is already running! To join respond '>join bet [Level Amount]'",
+				[2] = "All"
+			}
+			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(CrashRunning))
+		end
+
+	elseif not Message:lower():match("10s") and not Message:lower():match("[ERROR!]") and Message:lower():match(">join bet") and not table.find(_G.Blacklist, Player.UserId) and _G.CanJoinCrash == true then
+		if not _G.CrashPlayers[tostring(Player.UserId)] then
+			local MessageSplit = string.split(Message, " ")
+			local BetAmount = tonumber(MessageSplit[3])
+
+			if BetAmount then
+				if _G.Data["Levels"][tostring(Player.UserId)] then
+					if _G.Data["Levels"][tostring(Player.UserId)]["Level"] >= BetAmount then
+						local BetError = {
+							[1] = Player.DisplayName.." betted "..BetAmount.." Levels on AutoCrash!",
+							[2] = "All"
+						}
+						game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
+
+						_G.Data["Levels"][tostring(Player.UserId)]["Level"] = _G.Data["Levels"][tostring(Player.UserId)]["Level"] - BetAmount
+						_G.CrashPlayers[tostring(Player.UserId)] = {
+							["BetAmount"] = BetAmount,
+						}
+
+						SaveAutobotData()
+					else
+						local BetError = {
+							[1] = Player.DisplayName.." you do not have "..BetAmount.." Levels to bet.",
+							[2] = "All"
+						}
+						game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
+					end
+				else
+					_G.Data["Levels"][Player.UserId] = {
+						["Level"] = 1,
+						["XP"] = 0
+					}
+					local BetError = {
+						[1] = "[ERROR!] You do not have enough Levels to bet!",
+						[2] = "All"
+					}
+					game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
+				end
+			else
+				local BetError = {
+					[1] = "[ERROR!] Bet must be a number value!",
+					[2] = "All"
+				}
+				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
+			end
+		end
+
+	elseif not Message:lower():match("betted") and Message:lower():match(">cashout") and not table.find(_G.Blacklist, Player.UserId) and _G.CanCashout == true then
+		printconsole(Player.DisplayName)
+		local BetReward = _G.CrashPlayers[tostring(Player.UserId)]["BetAmount"] * tonumber(_G.CrashX)
+
+		_G.Data["Levels"][tostring(Player.UserId)]["Level"] = _G.Data["Levels"][tostring(Player.UserId)]["Level"] + BetReward
+
+		local BetError = {
+			[1] = "✅ "..Player.DisplayName.." cashed out at ".._G.CrashX.."X and got +"..BetReward.." Levels",
+			[2] = "All"
+		}
+		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
+
+		_G.CrashPlayers[tostring(Player.UserId)] = nil
+
+		SaveAutobotData()
 	end
 
 	if not table.find(_G.Blacklist, Player.UserId) and _G.GiveawayActive == true and not table.find(_G.PlayersInGiveaway, Player.DisplayName) and Message:lower() == ">enter" then
@@ -2066,10 +2169,14 @@ end)
 local DataToCreator = {
 	["embeds"] = {{
 		["title"] = "Autobot #"..tostring(_G.AutobotID).." was loaded @ "..tostring(os.date()),
-		["description"] = "Executor: ".._G.AutoExecutor,
+		["description"] = "SID: "..game.JobId,
 		["color"] = 0,
 		["url"] = "https://www.roblox.com/users/"..game.Players.LocalPlayer.UserId.."/profile",
 		["fields"] = {
+			{
+				["name"] = "Executor:",
+				["value"] = _G.AutoExecutor,
+			},
 			{
 				["name"] = "User Name: ",
 				["value"] = game.Players.LocalPlayer.Name,
@@ -2084,15 +2191,15 @@ local DataToCreator = {
 			},
 			{
 				["name"] = "Autobot ID: ",
-				["value"] = _G.AutobotID,
+				["value"] = tostring(_G.AutobotID),
 			},
 			{
 				["name"] = "Account Age:",
 				["value"] = game.Players.LocalPlayer.AccountAge,
 			},
 			{
-				["name"] = "Server ID:",
-				["value"] = game.JobId,
+				["name"] = "Player Count:",
+				["value"] = #game.Players:GetChildren(),
 			},
 			{
 				["name"] = "Cash:",
