@@ -2013,6 +2013,7 @@ function RunAutoBot(Player, Message)
 			local BetAmount = tonumber(MessageSplit[3])
 
 			if BetAmount then
+			if not BetAmount == 0 then
 				if _G.Data["Levels"][tostring(Player.UserId)] then
 					if _G.Data["Levels"][tostring(Player.UserId)]["Level"] >= BetAmount then
 						local BetError = {
@@ -2047,13 +2048,20 @@ function RunAutoBot(Player, Message)
 				end
 			else
 				local BetError = {
+					[1] = "[ERROR!] Bet must be greater than 0!",
+					[2] = "All"
+				}
+				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
+			end
+			else
+				local BetError = {
 					[1] = "[ERROR!] Bet must be a number value!",
 					[2] = "All"
 				}
 				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
 			end
 		end
-
+		
 	elseif not Message:lower():match("betted") and Message:lower():match(">cashout") and not table.find(_G.Blacklist, Player.UserId) and _G.CanCashout == true then
 		printconsole(Player.DisplayName)
 		local BetReward = _G.CrashPlayers[tostring(Player.UserId)]["BetAmount"] * tonumber(_G.CrashX)
