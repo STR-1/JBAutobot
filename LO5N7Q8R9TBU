@@ -57,7 +57,7 @@ local loadedargs = {
 game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(loadedargs[1], loadedargs[2])
 
 local loadedargs2 = {
-	[1] = ">Who Is [Player's Display Name], >[Robbery Name] Status, >Roast [Player's Display Name], >Where Is [Players Display Name], >Next Open, >AirDrops, >Joke, >Highest Bounty, >Level, >Rewards, >Friend",
+	[1] = ">Who Is [Player], >[Robbery Name] Status, >Roast [Player], >Where Is [Player], >AutoCrash, >Next Open, >AirDrops, >Joke, >Highest Bounty, >Level, >Rewards, >Friend",
 	[2] = "All"
 }
 game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(loadedargs2[1], loadedargs2[2])
@@ -760,7 +760,7 @@ function RunAutoBot(Player, Message)
 		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(loadedargs[1], loadedargs[2])
 		
 		local loadedargs2 = {
-			[1] = ">Who Is [Player's Display Name], >[Robbery Name] Status, >Roast [Player's Display Name], >Where Is [Players Display Name], >Next Open, >AirDrops, >Joke, >Highest Bounty, >Level, >Rewards, >Friend",
+			[1] = ">Who Is [Player], >[Robbery Name] Status, >Roast [Player], >Where Is [Player], >AutoCrash, >Next Open, >AirDrops, >Joke, >Highest Bounty, >Level, >Rewards, >Friend",
 			[2] = "All"
 		}
 		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(loadedargs2[1], loadedargs2[2])
