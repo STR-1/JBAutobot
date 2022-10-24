@@ -2013,7 +2013,6 @@ function RunAutoBot(Player, Message)
 			local BetAmount = tonumber(MessageSplit[3])
 
 			if BetAmount then
-			if not BetAmount == 0 then
 				if _G.Data["Levels"][tostring(Player.UserId)] then
 					if _G.Data["Levels"][tostring(Player.UserId)]["Level"] >= BetAmount then
 						local BetError = {
@@ -2046,13 +2045,6 @@ function RunAutoBot(Player, Message)
 					}
 					game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
 				end
-			else
-				local BetError = {
-					[1] = "[ERROR!] Bet must be greater than 0!",
-					[2] = "All"
-				}
-				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
-			end
 			else
 				local BetError = {
 					[1] = "[ERROR!] Bet must be a number value!",
