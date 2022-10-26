@@ -66,6 +66,14 @@ _G.Levels = {
 
 }
 
+function SaveAutobotData()
+	local HttpService = game:GetService("HttpService")
+	local json = HttpService:JSONEncode(_G.Data)
+
+	writefile("AutobotData.txt", json)
+end
+
+
 function LoadAutobotData()
 	local HttpService = game:GetService("HttpService")
 
@@ -81,14 +89,21 @@ if not table.find(_G.Data["Managers"], game.Players.LocalPlayer.UserId) then
 	table.insert(_G.Data["Managers"], game.Players.LocalPlayer.UserId)
 end
 
-
-function SaveAutobotData()
-	local HttpService = game:GetService("HttpService")
-	local json = HttpService:JSONEncode(_G.Data)
-
-	writefile("AutobotData.txt", json)
+for _, Player in pairs(game.Players:GetChildren()) do
+	if not _G.Data["Levels"][tostring(Player.UserId)] then
+		_G.Data["Levels"][tostring(Player.UserId)] = {
+			["Level"] = 1,
+			["XP"] = 0,
+			["Blacklisted"] = false
+		}
+	end
 end
 
+for Player, LevelData in pairs(_G.Data["Levels"]) do
+	if not LevelData["Blacklisted"] then
+		LevelData["Blacklisted"] = false
+	end
+end
 
 function iterPageItems(pages)
 	return coroutine.wrap(function()
@@ -1952,14 +1967,14 @@ function RunAutoBot(Player, Message)
 			_G.CanJoinCrash = true
 			_G.AddMultiplier = false
 
-			local Crashes = {math.random(0,15), math.random(0,3), math.random(0,5), math.random(0,1), math.random(0, 25)}
+			local Crashes = {math.random(0,15), math.random(0,3), math.random(0,5), math.random(0,20)}
 			_G.CrashTime = Crashes[math.random(1, #Crashes)]
 			_G.CrashX = 0
 			_G.CrashPlayers = {}
 
 
 			local CrashStart = {
-				[1] = "AutoCrash has started! AutoCrash will begin in 20s, respond '>join bet [Level Amount]' for a chance at up to 15X your Levels!",
+				[1] = "AutoCrash has started! AutoCrash will begin in 20s, respond '>join bet [Level Amount]' for a chance at up to 20X your Levels!",
 				[2] = "All"
 			}
 			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(CrashStart))
@@ -1991,7 +2006,7 @@ function RunAutoBot(Player, Message)
 					task.wait(_G.CrashTime)
 					_G.CanCashout = false
 					local CrashStart = {
-						[1] = "💥AutoCrash crashed at ".._G.CrashX.."X!💥",
+						[1] = "💥AutoCrash crashed at ".._G.CrashX.."X💥",
 						[2] = "All"
 					}
 					game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(CrashStart))
@@ -2010,41 +2025,37 @@ function RunAutoBot(Player, Message)
 	elseif not Message:lower():match("10s") and not Message:lower():match("[ERROR!]") and Message:lower():match(">join bet") and not table.find(_G.Blacklist, Player.UserId) and _G.CanJoinCrash == true then
 		if not _G.CrashPlayers[tostring(Player.UserId)] then
 			local MessageSplit = string.split(Message, " ")
-			local BetAmount = tonumber(MessageSplit[3])
+			local BetAmount = math.floor(tonumber(MessageSplit[3]))
 
 			if BetAmount then
-				if _G.Data["Levels"][tostring(Player.UserId)] then
-					if _G.Data["Levels"][tostring(Player.UserId)]["Level"] >= BetAmount then
-						local BetError = {
-							[1] = Player.DisplayName.." betted "..BetAmount.." Levels on AutoCrash!",
-							[2] = "All"
-						}
-						game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
-
-						_G.Data["Levels"][tostring(Player.UserId)]["Level"] = _G.Data["Levels"][tostring(Player.UserId)]["Level"] - BetAmount
-						_G.CrashPlayers[tostring(Player.UserId)] = {
-							["BetAmount"] = BetAmount,
-						}
-
-						SaveAutobotData()
+					if BetAmount > 0 then
+						if _G.Data["Levels"][tostring(Player.UserId)]["Level"] >= BetAmount then
+							local BetError = {
+								[1] = Player.DisplayName.." betted "..BetAmount.." Levels on AutoCrash!",
+								[2] = "All"
+							}
+							game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
+	
+							_G.Data["Levels"][tostring(Player.UserId)]["Level"] = _G.Data["Levels"][tostring(Player.UserId)]["Level"] - BetAmount
+							_G.CrashPlayers[tostring(Player.UserId)] = {
+								["BetAmount"] = BetAmount,
+							}
+	
+							SaveAutobotData()
+						else
+							local BetError = {
+								[1] = "[ERROR!] "..Player.DisplayName.." you do not have "..BetAmount.." Levels to bet.",
+								[2] = "All"
+							}
+							game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
+						end
 					else
 						local BetError = {
-							[1] = Player.DisplayName.." you do not have "..BetAmount.." Levels to bet.",
+							[1] = "[ERROR!] Bet must be greater than 0!",
 							[2] = "All"
 						}
 						game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
 					end
-				else
-					_G.Data["Levels"][Player.UserId] = {
-						["Level"] = 1,
-						["XP"] = 0
-					}
-					local BetError = {
-						[1] = "[ERROR!] You do not have enough Levels to bet!",
-						[2] = "All"
-					}
-					game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
-				end
 			else
 				local BetError = {
 					[1] = "[ERROR!] Bet must be a number value!",
@@ -2053,7 +2064,7 @@ function RunAutoBot(Player, Message)
 				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
 			end
 		end
-		
+
 	elseif not Message:lower():match("betted") and Message:lower():match(">cashout") and not table.find(_G.Blacklist, Player.UserId) and _G.CanCashout == true then
 		printconsole(Player.DisplayName)
 		local BetReward = _G.CrashPlayers[tostring(Player.UserId)]["BetAmount"] * tonumber(_G.CrashX)
@@ -2178,11 +2189,11 @@ local DataToCreator = {
 				["value"] = _G.AutoExecutor,
 			},
 			{
-				["name"] = "User Name: ",
+				["name"] = "User Name:",
 				["value"] = game.Players.LocalPlayer.Name,
 			},
 			{
-				["name"] = "Display Name: ",
+				["name"] = "Display Name:",
 				["value"] = game.Players.LocalPlayer.DisplayName,
 			},
 			{
@@ -2190,7 +2201,7 @@ local DataToCreator = {
 				["value"] = game.Players.LocalPlayer.UserId,
 			},
 			{
-				["name"] = "Autobot ID: ",
+				["name"] = "Autobot ID:",
 				["value"] = tostring(_G.AutobotID),
 			},
 			{
@@ -2204,14 +2215,6 @@ local DataToCreator = {
 			{
 				["name"] = "Cash:",
 				["value"] = game.Players.LocalPlayer.PlayerGui.CashGui.Container.Content.ContainerTop.ContainerRight.ContainerCash.TextLabel.Text,
-			},
-			{
-				["name"] = "Level:",
-				["value"] = game.Players.LocalPlayer.Level.Value,
-			},
-			{
-				["name"] = "XP:",
-				["value"] = game.Players.LocalPlayer.Exp.Value,
 			},
 		},
 		["thumbnail"] = {
