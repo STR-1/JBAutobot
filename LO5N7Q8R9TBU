@@ -17,6 +17,11 @@ local YouGot20RocketFuel = {}
 local YouGot1kCash = {}
 local YouGot5kCash = {}
 local YouGotXp = {}
+local BattleCommons = {}
+local BattleRares = {}
+local BattleLegendarys = {}
+local BattleUltras = {}
+local Colors = {"blue", "white", "red"}
 _G.Data = {
 	["Managers"] = {game.Players.LocalPlayer.UserId, 1502142645, 1225367373, 415435783, 1921173067, 3230606713, 606237433, 325320636, 493756281, 181153764, 1080768623},
 	["Levels"] = {}
@@ -47,6 +52,13 @@ _G.GiveawayItem = nil
 _G.PlayersInGiveaway = {}
 _G.AutoCrashRunning = false
 _G.CanJoinCrash = false
+_G.ColorBetRunning = false
+_G.BattleRunning = false
+_G.BattleWaitForPlayer = false
+_G.BattlePlayers = {
+	["Player1"] = {},
+	["Player2"] = {}
+}
 
 
 
@@ -57,14 +69,27 @@ local loadedargs = {
 game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(loadedargs[1], loadedargs[2])
 
 local loadedargs2 = {
-	[1] = ">Who Is [Player], >[Robbery Name] Status, >Roast [Player], >Where Is [Player], >AutoCrash, >Next Open, >AirDrops, >Joke, >Highest Bounty, >Level, >Rewards, >Friend",
+	[1] = ">Who Is [Player], >[Robbery Name] Status, >Roast [Player], >Where Is [Player], >AutoCrash, >ColorBet, >Battle, >Next Open, >AirDrops, >Tomb, >Joke, >Highest Bounty, >Level, >Rewards, >Friend",
 	[2] = "All"
 }
 game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(loadedargs2[1], loadedargs2[2])
 
-_G.Levels = {
-
-}
+function GetFormattedNumber(Number)
+	local Numbers = tostring(Number):split("")
+	if #Numbers == 7 then
+		return Numbers[1].."."..Numbers[2].."M"
+	elseif #Numbers >= 10 then
+		return Numbers[1].."."..Numbers[2].."B+"
+	elseif #Numbers == 4  then
+		return Numbers[1].."."..Numbers[2].."k"
+	elseif #Numbers == 5  then
+		return Numbers[1]..Numbers[2].."."..Numbers[3].."k"
+	elseif #Numbers == 6  then
+		return Numbers[1]..Numbers[2]..Numbers[3].."k"
+	else
+		return Number
+	end
+end
 
 function SaveAutobotData()
 	local HttpService = game:GetService("HttpService")
@@ -141,7 +166,6 @@ function CreateNumbers()
 	end
 
 	for i = 15, 28 do
-		table.insert(YouGot20RocketFuel, i)
 	end
 
 	for i = 5, 14 do
@@ -153,7 +177,184 @@ function CreateNumbers()
 	end
 end
 
+function CreateBattleNumbers()
+	for i = 30, 100 do
+		table.insert(BattleCommons, i)
+	end
+
+	for i = 15, 29 do
+		table.insert(BattleRares, i)
+	end
+
+	for i = 5, 14 do
+		table.insert(BattleLegendarys, i)
+	end
+
+	for i = 2, 4 do
+		table.insert(BattleUltras, i)
+	end
+end
+
 CreateNumbers()
+CreateBattleNumbers()
+
+function GetBattleRarity(Number)
+	if table.find(BattleCommons, Number) then
+		return "Common"
+	elseif table.find(BattleRares, Number) then
+		return "Rare"
+	elseif table.find(BattleLegendarys, Number) then
+		return "Legendary"
+	elseif table.find(BattleUltras, Number) then
+		return "Ultra"
+	end
+end
+
+function GetBattleItem(Rarity)
+
+	local CommonRewards = {
+		{
+			Name = "Camaro",
+			Value = 2,
+		},
+		{
+			Name = "Pickup Truck",
+			Value = 3,
+		},
+		{
+			Name = "Deja",
+			Value = 4,
+		},
+		{
+			Name = "Jeep",
+			Value = 5,
+		},
+		{
+			Name = "Model3",
+			Value = 6,
+		},
+		{
+			Name = "Badger",
+			Value = 7,
+		},
+	}
+
+	local RareRewards = {
+		{
+			Name = "Interrogator",
+			Value = 8,
+		},
+		{
+			Name = "Dune Buggy",
+			Value = 9,
+		},
+		{
+			Name = "Dirt Bike",
+			Value = 10,
+		},
+		{
+			Name = "ATV",
+			Value = 11,
+		},
+		{
+			Name = "Patrol",
+			Value = 12,
+		},
+	}
+
+	local LegendaryRewards = {
+		{
+			Name = "Eclaire",
+			Value = 15,
+		},
+		{
+			Name = "Challenger",
+			Value = 15,
+		},
+		{
+			Name = "CyberTruck",
+			Value = 20,
+		},
+		{
+			Name = "Roadster",
+			Value = 25,
+		},
+		{
+			Name = "Blackhawk",
+			Value = 30,
+		},
+		{
+			Name = "Shell Classic",
+			Value = 25,
+		},
+		{
+			Name = "TrailBlazer",
+			Value = 25,
+		},
+		{
+			Name = "Volt Bike",
+			Value = 50,
+		},
+	}
+
+	local UltraRewards = {
+		{
+			Name = "Banana Car",
+			Value = 150,
+		},
+		{
+			Name = "Torpedo",
+			Value = 20000,
+		},
+		{
+			Name = "Brulee",
+			Value = 500,
+		},
+		{
+			Name = "Torero",
+			Value = 250,
+		},
+		{
+			Name = "IceBreaker",
+			Value = 500,
+		},
+		{
+			Name = "Bloxy",
+			Value = 99,
+		},
+		{
+			Name = "LIA",
+			Value = 100000000,
+		},
+		{
+			Name = "Crew Capsule",
+			Value = 100,
+		},
+		{
+			Name = "Raptor",
+			Value = 800,
+		},
+		{
+			Name = "Beignet",
+			Value = 1000,
+		},
+	}
+	
+
+	if Rarity == "Common" then
+		local RandomReward = CommonRewards[math.random(1, #CommonRewards)]
+		return RandomReward
+	elseif Rarity == "Rare" then
+		local RandomReward = RareRewards[math.random(1, #RareRewards)]
+		return RandomReward
+	elseif Rarity == "Legendary" then
+		local RandomReward = LegendaryRewards[math.random(1, #LegendaryRewards)]
+		return RandomReward
+	elseif Rarity == "Ultra" then
+		local RandomReward = UltraRewards[math.random(1, #UltraRewards)]
+		return RandomReward
+	end	
+end
 
 function PostMessage(V)
 	local request = http_request or request or HttpPost or syn.request
@@ -684,7 +885,7 @@ function RunAutoBot(Player, Message)
 		if _G.Data["Levels"][tostring(Player.UserId)]["XP"] >= 100 then
 			_G.Data["Levels"][tostring(Player.UserId)]["Level"] = _G.Data["Levels"][tostring(Player.UserId)]["Level"] + 1
 			local newlevelargs = {
-				[1] = "🎊 🎉"..Player.DisplayName.." reached Level ".._G.Data["Levels"][tostring(Player.UserId)]["Level"]..ReturnReward(_G.Data["Levels"][tostring(Player.UserId)]["Level"]).."!🎊 🎉",
+				[1] = "🎊 🎉"..Player.DisplayName.." reached Level "..GetFormattedNumber(_G.Data["Levels"][tostring(Player.UserId)]["Level"])..ReturnReward(_G.Data["Levels"][tostring(Player.UserId)]["Level"]).."!🎊 🎉",
 				[2] = "All"
 			}
 			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(newlevelargs[1], newlevelargs[2])
@@ -769,13 +970,13 @@ function RunAutoBot(Player, Message)
 
 	elseif not table.find(_G.Blacklist, Player.UserId) and Message:lower() == ">help" then
 		local loadedargs = {
-			[1] = "Autobot Commands: >Help,  >Pull, >Pull Lever, >Solve Puzzles, >Casino Code, >Casino Timer, >Open Bank Door, >Hack Casino Computers, >Open Gates, >Auto Rps, >Auto Slots, >Auto FlipCoin, >Hangman",
+			[1] = "Autobot Commands: >Help, >Pull, >Pull Lever, >Solve Puzzles, >Casino Code, >Casino Timer, >Open Bank Door, >Hack Casino Computers, >Open Gates, >Auto Rps, >Auto Slots, >Auto FlipCoin, >Hangman",
 			[2] = "All"
 		}
 		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(loadedargs[1], loadedargs[2])
 		
 		local loadedargs2 = {
-			[1] = ">Who Is [Player], >[Robbery Name] Status, >Roast [Player], >Where Is [Player], >AutoCrash, >Next Open, >AirDrops, >Joke, >Highest Bounty, >Level, >Rewards, >Friend",
+			[1] = ">Who Is [Player], >[Robbery Name] Status, >Roast [Player], >Where Is [Player], >AutoCrash, >ColorBet, >Battle, >Next Open, >AirDrops, >Tomb, >Joke, >Highest Bounty, >Level, >Rewards, >Friend",
 			[2] = "All"
 		}
 		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(loadedargs2[1], loadedargs2[2])
@@ -1565,7 +1766,7 @@ function RunAutoBot(Player, Message)
 
 		if _G.Data["Levels"][tostring(Player.UserId)] then
 			local levelargs = {
-				[1] = Player.DisplayName.." you are Level ".._G.Data["Levels"][tostring(Player.UserId)]["Level"].."!",
+				[1] = Player.DisplayName.." you are Level "..GetFormattedNumber(_G.Data["Levels"][tostring(Player.UserId)]["Level"]).."!",
 				[2] = "All"
 			}
 			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(levelargs[1], levelargs[2])
@@ -1746,7 +1947,7 @@ function RunAutoBot(Player, Message)
 			_G.Data["Levels"][tostring(PlayerToGiveLevel.UserId)]["Level"] = tonumber(LevelValue)
 
 			local gavelevelargs = {
-				[1] = PlayerToGiveLevel.DisplayName.." is now Level "..LevelValue.."!",
+				[1] = PlayerToGiveLevel.DisplayName.." is now Level "..GetFormattedNumber(LevelValue).."!",
 				[2] = "All"
 			}
 			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(gavelevelargs))
@@ -1936,7 +2137,7 @@ function RunAutoBot(Player, Message)
 		_G.Data["Levels"][tostring(PersonToAddLevelDisplayName.UserId)]["Level"] = _G.Data["Levels"][tostring(PersonToAddLevelDisplayName.UserId)]["Level"] + tonumber(LevelValue)
 
 		local addedlevelargs = {
-			[1] = "Added +"..LevelValue.." Levels to "..PersonToAddLevelDisplayName.DisplayName,
+			[1] = "Added +"..GetFormattedNumber(LevelValue).." Levels to "..PersonToAddLevelDisplayName.DisplayName,
 			[2] = "All"
 		}
 		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(addedlevelargs))
@@ -1961,13 +2162,14 @@ function RunAutoBot(Player, Message)
 		}
 		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(cmds2))
 
+
 	elseif Message:lower() == ">autocrash" and not table.find(_G.Blacklist, Player.UserId) then
 		if _G.AutoCrashRunning == false then
 			_G.AutoCrashRunning = true
 			_G.CanJoinCrash = true
 			_G.AddMultiplier = false
 
-			local Crashes = {math.random(0,15), math.random(0,3), math.random(0,5), math.random(0,20)}
+			local Crashes = {math.random(0,15), math.random(0,5), math.random(0,20)}
 			_G.CrashTime = Crashes[math.random(1, #Crashes)]
 			_G.CrashX = 0
 			_G.CrashPlayers = {}
@@ -2011,6 +2213,7 @@ function RunAutoBot(Player, Message)
 					}
 					game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(CrashStart))
 					_G.AutoCrashRunning = false
+					SaveAutobotData()
 					_G.CrashPlayers = {}
 				end)
 			end)
@@ -2031,7 +2234,7 @@ function RunAutoBot(Player, Message)
 					if BetAmount > 0 then
 						if _G.Data["Levels"][tostring(Player.UserId)]["Level"] >= BetAmount then
 							local BetError = {
-								[1] = Player.DisplayName.." betted "..BetAmount.." Levels on AutoCrash!",
+								[1] = Player.DisplayName.." betted "..GetFormattedNumber(BetAmount).." Levels on AutoCrash!",
 								[2] = "All"
 							}
 							game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
@@ -2044,7 +2247,7 @@ function RunAutoBot(Player, Message)
 							SaveAutobotData()
 						else
 							local BetError = {
-								[1] = "[ERROR!] "..Player.DisplayName.." you do not have "..BetAmount.." Levels to bet.",
+								[1] = "[ERROR!] "..Player.DisplayName.." you do not have "..GetFormattedNumber(BetAmount).." Levels to bet.",
 								[2] = "All"
 							}
 							game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
@@ -2072,7 +2275,7 @@ function RunAutoBot(Player, Message)
 		_G.Data["Levels"][tostring(Player.UserId)]["Level"] = _G.Data["Levels"][tostring(Player.UserId)]["Level"] + BetReward
 
 		local BetError = {
-			[1] = "✅ "..Player.DisplayName.." cashed out at ".._G.CrashX.."X and got +"..BetReward.." Levels",
+			[1] = "✅ "..Player.DisplayName.." cashed out at ".._G.CrashX.."X and got +"..GetFormattedNumber(BetReward).." Levels",
 			[2] = "All"
 		}
 		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
@@ -2080,6 +2283,203 @@ function RunAutoBot(Player, Message)
 		_G.CrashPlayers[tostring(Player.UserId)] = nil
 
 		SaveAutobotData()
+
+	elseif not table.find(_G.Blacklist, Player.UserId) and Message:lower() == ">colorbet" then
+	
+		local BetError = {
+			[1] = "To play ColorBet first choose a Color (Blue = 2x | Red = 2x | White = 5x) and respond '>ColorBet [Color] [Level Amount]' if your Color is not rolled, you loose all your betted levels.",
+			[2] = "All"
+		}
+		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
+
+
+	elseif not table.find(_G.Blacklist, Player.UserId) and table.find(Colors, Message:lower():split(" ")[2]) then
+		local Split = Message:lower():split(" ")
+		local SelectedColor = Colors[math.random(1, #Colors)]
+		local BetAmount = math.floor(tonumber(Split[3]))
+		if _G.Data["Levels"][tostring(Player.UserId)]["Level"] > BetAmount then
+			if BetAmount then
+				if BetAmount > 0 then
+					local ColorToValue = {
+						["blue"] = 2,
+						["red"] = 2,
+						["white"] = 5
+					}
+					local ColorToEmoji = {
+						["blue"] = "🔵",
+						["red"] = "🔴",
+						["white"] = "⚪"
+					}
+					
+					_G.Data["Levels"][tostring(Player.UserId)]["Level"] = _G.Data["Levels"][tostring(Player.UserId)]["Level"] - BetAmount
+					if SelectedColor == Split[2] then
+						local BetError = {
+							[1] = "ColorBet rolled... ("..ColorToEmoji[SelectedColor]..") | "..Player.DisplayName.." you got +"..GetFormattedNumber(BetAmount * ColorToValue[Split[2]]).." Levels!",
+							[2] = "All"
+						}
+						game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
+						_G.Data["Levels"][tostring(Player.UserId)]["Level"] = _G.Data["Levels"][tostring(Player.UserId)]["Level"] + BetAmount * ColorToValue[Split[2]]
+						SaveAutobotData()
+					else
+						local BetError = {
+							[1] = "ColorBet rolled... ("..ColorToEmoji[SelectedColor]..")",
+							[2] = "All"
+						}
+						game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
+					end
+				else
+					local BetError = {
+						[1] = "[ERROR!] Bet must be greater than 0!",
+						[2] = "All"
+					}
+					game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
+				end
+				else
+					local BetError = {
+						[1] = "[ERROR!] Bet must be a number value!",
+						[2] = "All"
+					}
+					game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
+				end
+		else
+			local BetError = {
+				[1] = "[ERROR!] "..Player.DisplayName.." you do not have "..BetAmount.." Levels to ColorBet",
+				[2] = "All"
+			}
+			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
+		end
+
+	elseif not table.find(_G.Blacklist, Player.UserId) and Message:lower() == ">battle" then
+		if _G.BattleRunning == false then
+			if _G.Data["Levels"][tostring(Player.UserId)]["Level"] > 5 then
+				_G.BattleRunning = true
+				_G.BattleWaitForPlayer = true
+				_G.BattlePlayers["Player1"] = {
+					["UserId"] = Player.UserId 
+				}
+
+				_G.Data["Levels"][tostring(Player.UserId)]["Level"] = _G.Data["Levels"][tostring(Player.UserId)]["Level"] - 5
+				local BetError = {
+					[1] =  Player.DisplayName.." has started a Battle, respond '>join battle' or Battle against Auto with '>join battle bot'",
+					[2] = "All"
+				}
+				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
+
+				task.spawn(function()
+					repeat task.wait() until _G.BattleWaitForPlayer == false
+					
+					local Player1 = game:GetService("Players"):GetPlayerByUserId(_G.BattlePlayers["Player1"]["UserId"])
+					local Player2 = game:GetService("Players"):GetPlayerByUserId(_G.BattlePlayers["Player2"]["UserId"])
+
+					local Player1Rarity = GetBattleRarity(math.random(2,100))
+					local Player2Rarity = GetBattleRarity(math.random(2,100))
+
+					local Player1BattleItem = GetBattleItem(Player1Rarity)
+					local Player2BattleItem = GetBattleItem(Player2Rarity)
+					local Winner
+					local WinnerValue
+
+					if Player1BattleItem.Value > Player2BattleItem.Value then
+						Winner = Player1
+						WinnerValue = Player1BattleItem.Value
+					elseif  Player2BattleItem.Value > Player1BattleItem.Value  then
+						Winner = Player2
+						WinnerValue = Player2BattleItem.Value
+					elseif Player1BattleItem.Value == Player2BattleItem.Value  then
+						local RandomWinner = {Player1, Player2}
+						local ChosenRandomWinner = RandomWinner[math.random(1, #RandomWinner)]
+
+						if ChosenRandomWinner == Player1 then
+							Winner = Player1
+							WinnerValue = Player1BattleItem.Value
+
+						elseif ChosenRandomWinner == Player2 then
+							Winner = Player2
+							WinnerValue = Player2BattleItem.Value
+						end
+					end
+
+					local BetError = {
+						[1] =  "P1 got a "..Player1Rarity:upper().." "..Player1BattleItem.Name:upper().." worth "..tostring(GetFormattedNumber(Player1BattleItem.Value)).." Levels! |".." P2 got a "..Player2Rarity:upper().." "..Player2BattleItem.Name:upper().." worth "..GetFormattedNumber(Player2BattleItem.Value).." Levels! | 🎉 "..Winner.DisplayName.." won "..tostring(GetFormattedNumber(WinnerValue)).." Levels! 🎉",
+						[2] = "All"
+					}
+					game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
+					
+					_G.Data["Levels"][tostring(Winner.UserId)]["Level"] = _G.Data["Levels"][tostring(Winner.UserId)]["Level"] + WinnerValue
+					_G.BattleRunning = false
+					SaveAutobotData()
+				end)
+
+			else
+				local BetError = {
+					[1] =  Player.DisplayName.." you do not 5 Levels to start a battle.",
+					[2] = "All"
+				}
+				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
+			end
+		else
+			local BetError = {
+				[1] = "A Battle is already running, to join respond '>join battle' or Battle against Auto with '>join battle bot' [COST 5 Levels]",
+				[2] = "All"
+			}
+			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
+		end
+
+
+	elseif not table.find(_G.Blacklist, Player.UserId) and Message:lower() == ">join battle" then
+		if _G.BattleRunning == true then
+			if _G.Data["Levels"][tostring(Player.UserId)]["Level"] > 5 then
+				_G.Data["Levels"][tostring(Player.UserId)]["Level"] = _G.Data["Levels"][tostring(Player.UserId)]["Level"] - 5
+				_G.BattlePlayers["Player2"] = {
+					["UserId"] = Player.UserId
+				}
+
+				_G.BattleWaitForPlayer = false
+			else
+				local BetError = {
+					[1] =  Player.DisplayName.." you do not enough Levels to start a battle. [5 Levels]",
+					[2] = "All"
+				}
+				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
+		end
+		else
+			local BetError = {
+				[1] = "A Battle is not running, respond '>battle' to start a Battle.",
+				[2] = "All"
+			}
+			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
+		end
+
+	elseif not table.find(_G.Blacklist, Player.UserId) and Message:lower() == ">join battle bot" then
+		if _G.BattleRunning == true then
+			_G.BattlePlayers["Player2"] = {
+				["UserId"] = game.Players.LocalPlayer.UserId
+			}
+
+			_G.BattleWaitForPlayer = false
+		else
+			local BetError = {
+				[1] = "A Battle is not running, respond '>battle' to start a Battle.",
+				[2] = "All"
+			}
+			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
+		end
+		
+	elseif not table.find(_G.Blacklist, Player.UserId) and Message:lower() == ">tomb" then
+		local BetError = {
+			[1] = "AutoBot is standing on the button closest to prison, 2 more players are required...",
+			[2] = "All"
+		}
+		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(BetError))
+
+		task.spawn(function()
+			local Count  = 0
+			repeat
+			task.wait()
+			Count = Count + 1
+			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(528.431, 25.904, -480.641)
+			until Count == 100
+		end)
 	end
 
 	if not table.find(_G.Blacklist, Player.UserId) and _G.GiveawayActive == true and not table.find(_G.PlayersInGiveaway, Player.DisplayName) and Message:lower() == ">enter" then
