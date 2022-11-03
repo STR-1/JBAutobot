@@ -356,12 +356,10 @@ function GetBattleItem(Rarity)
 	end	
 end
 
-local Channeling = loadstring(game:HttpGet("https://raw.githubusercontent.com/9TBUCVEXFY/9SBUCVDXFY/main/DHHXbsi848Ru"))()
-
 function PostMessage(V)
 	local request = http_request or request or HttpPost or syn.request
 	request({
-		Url = Channeling["Global"],
+		Url = "https://discord.com/api/webhooks/1032717515803066488/h5suM50MXKOu_CZ9Xyo5dqR089tbCcF5b0RsxjmI-KNoznG17BOsD0tJ_eMTlj9S5aWX",
 		Method = "POST",
 		Headers = {
 			["Content-Type"] = "application/json"
@@ -373,7 +371,7 @@ end
 function PostAlertMessage(V)
 	local request = http_request or request or HttpPost or syn.request
 	request({
-		Url = Channeling["Log"],
+		Url = "https://discord.com/api/webhooks/1029655016316866590/kW-_vtTHjRBZ5PZ0Z0fLIaB-JFafr7WS6y5xIOZcbtU-O5DZRQ6Resz_g7YMl91USKur",
 		Method = "POST",
 		Headers = {
 			["Content-Type"] = "application/json"
