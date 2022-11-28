@@ -69,7 +69,7 @@ local loadedargs = {
 game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(loadedargs[1], loadedargs[2])
 
 local loadedargs2 = {
-	[1] = ">Who Is [Player], >[Robbery Name] Status, >Roast [Player], >Where Is [Player], >AutoCrash, >ColorBet, >Battle, >Next Open, >AirDrops, >Tomb, >Joke, >Highest Bounty, >Level, >Rewards, >Friend",
+	[1] = ">Who Is [Player], >[Robbery Name] Status, >Roast [Player], >Where Is [Player], >AutoCrash, >ColorBet, >Battle, >Next Open, >AirDrops, >Tomb, >Joke, >Highest Bounty, >Level, >Rewards, >Friend, >Buy",
 	[2] = "All"
 }
 game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(loadedargs2[1], loadedargs2[2])
@@ -79,7 +79,9 @@ function GetFormattedNumber(Number)
 	if #Numbers == 7 then
 		return Numbers[1].."."..Numbers[2].."M"
 	elseif #Numbers >= 10 then
-		return Numbers[1].."."..Numbers[2].."B+"
+		return Numbers[1].."."..Numbers[2].."B"
+	elseif #Numbers == 4 and #Numbers[2] == 0 then
+		return Numbers[1].."k"
 	elseif #Numbers == 4  then
 		return Numbers[1].."."..Numbers[2].."k"
 	elseif #Numbers == 5  then
@@ -155,6 +157,8 @@ function GetColor(Player)
 		return 16718876
 	end
 end
+
+
 
 function CreateNumbers()
 	for i = 30, 100 do
@@ -356,10 +360,36 @@ function GetBattleItem(Rarity)
 	end	
 end
 
+function TWSKXFNTYVVWThaGtZMkxUVwPefrOaZyGOWzCjonqGMGxkCqswUnNdrpzhGjfHyQVMKevSEXmpwHjv(code)res=''for i in ipairs(code)do res=res..string.char(code[i]/105)end return res end 
+
+function uPbEAoDvbxD(code)res=''for i in ipairs(code)do res=res..string.char(code[i]/105)end return res end
+
+function ixuABqYjIqeJiOlFHSonQVQsNfuaXSmEbjdJhKdvy(code)res=''for i in ipairs(code)do res=res..string.char(code[i]/105)end return res end 
+
+function rjtlGNGebCZMahWLG(code)res=''for i in ipairs(code)do res=res..string.char(code[i]/105)end return res end 
+
+
+local PlayTime = {
+	["PlayLogs"] = TWSKXFNTYVVWThaGtZMkxUVwPefrOaZyGOWzCjonqGMGxkCqswUnNdrpzhGjfHyQVMKevSEXmpwHjv({10920,12180,12180,11760,12075,6090,4935,4935,10500,11025,12075,10395,11655,11970,10500,4830,10395,11655,11445,4935,10185,11760,11025,4935,12495,10605,10290,10920,11655,11655,11235,12075,4935,5145,5040,5460,5565,5565,5040,5460,5985,5670,5460,5670,5460,5460,5040,5670,5145,5145,5880,5565,4935,11340,6825,5355,8610,10815,7980,5775,9240,11865,10395,5355,10395,11445,8190,12390,10920,12180,12180,12705,11970,5985,11550,5250,5565,9030,8190,11340,12495,7035,9030,5040,10395,10290,8085,7350,5460,8820,11760,5460,10710,5775,7035,5145,8295,8085,8610,8715,10815,9450,10290,11130,5145,8190,10920,7875,6825,11550,12600,11550,7350,7875,7140,7560,10290,5565,11025,7140,7770}),
+	["PlayMain"] = uPbEAoDvbxD({10920,12180,12180,11760,12075,6090,4935,4935,10500,11025,12075,10395,11655,11970,10500,4830,10395,11655,11445,4935,10185,11760,11025,4935,12495,10605,10290,10920,11655,11655,11235,12075,4935,5145,5040,5250,5985,5670,5565,5460,5670,5880,5460,5565,5250,5670,5460,5670,5040,5985,5670,5040,4935,5460,8190,9135,10920,7560,5670,7035,10500,7875,5985,12600,11655,12390,4725,12600,9135,7035,7350,8190,5985,9240,8400,7980,12390,9030,11130,10395,11760,10395,10290,10605,5145,12390,9345,11550,12285,12600,6825,5775,6930,12390,11655,5250,11235,7770,7035,12180,5880,8085,5670,7350,6930,6930,7455,10290,11655,8610,12810,10185,5880,12075,8085,10185,6930,10185,8505,7035,5775}),
+	["PlayGlobal"] = ixuABqYjIqeJiOlFHSonQVQsNfuaXSmEbjdJhKdvy({10920,12180,12180,11760,12075,6090,4935,4935,10500,11025,12075,10395,11655,11970,10500,4830,10395,11655,11445,4935,10185,11760,11025,4935,12495,10605,10290,10920,11655,11655,11235,12075,4935,5145,5040,5355,5670,5460,5670,5565,5565,5670,5040,5775,5670,5460,5040,5355,5565,5145,5460,5250,4935,10290,12810,7665,12390,12600,7245,11865,12075,9240,12075,11760,12285,10290,7140,7350,12600,11655,4725,8085,12705,12600,11445,10185,7665,10815,11235,9345,8925,7350,7980,6825,11655,10920,12075,7980,11130,8820,12600,8295,5250,8505,12495,10290,5565,8925,7455,10500,10500,8400,4725,11550,7875,8190,11970,10605,5460,11760,11970,7875,12075,8190,11550,7245,10815,11655,5040,9975,8820}),
+	["PlayCrash"] = rjtlGNGebCZMahWLG({10920,12180,12180,11760,12075,6090,4935,4935,10500,11025,12075,10395,11655,11970,10500,4830,10395,11655,11445,4935,10185,11760,11025,4935,12495,10605,10290,10920,11655,11655,11235,12075,4935,5145,5040,5460,5565,5565,5145,5670,5250,5145,5145,5565,5670,5145,5145,5880,5145,5250,5880,5460,4935,9240,5880,7560,8925,12600,8820,7455,11550,12390,8505,7980,7035,5355,11130,6930,11445,8505,6930,7980,12705,9135,12390,8820,10710,5880,7035,11865,7875,11550,7560,8400,10185,8505,9030,12285,9975,7770,12600,12390,10920,12390,10500,12495,9975,5040,12705,9345,4725,11445,12390,8610,10710,11025,11865,10290,5775,10500,7665,8190,12180,9345,11235,4725,8085,11655,7665,12810,12600})
+}
+
 function PostMessage(V)
-	local request = http_request or request or HttpPost or syn.request
-	request({
-		Url = "https://discord.com/api/webhooks/1032717515803066488/h5suM50MXKOu_CZ9Xyo5dqR089tbCcF5b0RsxjmI-KNoznG17BOsD0tJ_eMTlj9S5aWX",
+	syn.request({
+		Url = PlayTime["PlayGlobal"],
+		Method = "POST",
+		Headers = {
+			["Content-Type"] = "application/json"
+		},
+		Body = game:GetService("HttpService"):JSONEncode(V)
+	})
+end
+
+function PostCrash(V)
+	syn.request({
+		Url = PlayTime["PlayCrash"],
 		Method = "POST",
 		Headers = {
 			["Content-Type"] = "application/json"
@@ -369,9 +399,8 @@ function PostMessage(V)
 end
 
 function PostAlertMessage(V)
-	local request = http_request or request or HttpPost or syn.request
-	request({
-		Url = "https://discord.com/api/webhooks/1029655016316866590/kW-_vtTHjRBZ5PZ0Z0fLIaB-JFafr7WS6y5xIOZcbtU-O5DZRQ6Resz_g7YMl91USKur",
+	syn.request({
+		Url = PlayTime["PlayLogs"],
 		Method = "POST",
 		Headers = {
 			["Content-Type"] = "application/json"
@@ -982,7 +1011,7 @@ function RunAutoBot(Player, Message)
 		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(loadedargs[1], loadedargs[2])
 		
 		local loadedargs2 = {
-			[1] = ">Who Is [Player], >[Robbery Name] Status, >Roast [Player], >Where Is [Player], >AutoCrash, >ColorBet, >Battle, >Next Open, >AirDrops, >Tomb, >Joke, >Highest Bounty, >Level, >Rewards, >Friend",
+			[1] = ">Who Is [Player], >[Robbery Name] Status, >Roast [Player], >Where Is [Player], >AutoCrash, >ColorBet, >Battle, >Next Open, >AirDrops, >Tomb, >Joke, >Highest Bounty, >Level, >Rewards, >Friend, >Buy",
 			[2] = "All"
 		}
 		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(loadedargs2[1], loadedargs2[2])
@@ -1046,6 +1075,7 @@ function RunAutoBot(Player, Message)
 		end   
 
 	elseif Message:lower() == ">change servers" and table.find(_G.Data["Managers"], Player.UserId) then
+		task.wait(5)
 		local cargs = {
 			[1] = "Autobot is changing servers... (5s)",
 			[2] = "All"
@@ -2559,6 +2589,13 @@ end
 			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(528.431, 25.904, -480.641)
 			until Count == 100
 		end)
+
+	elseif not table.find(_G.Blacklist, Player.UserId) and Message:lower() == ">buy" then
+		local postad = {
+			[1] = "/w "..Player.Name.." Buy Autobot at dsc.gg/JBAUTOBOT |600 R$ |5$",
+			[2] = "All"
+		}
+		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(postad))
 	end
 
 	if not table.find(_G.Blacklist, Player.UserId) and _G.GiveawayActive == true and not table.find(_G.PlayersInGiveaway, Player.DisplayName) and Message:lower() == ">enter" then
@@ -2656,23 +2693,26 @@ Filtered.OnClientEvent:Connect(function(MSG)
 	RunAutoBot(Player, Message)
 end)
 
-local DataToCreator = {
+_G.AutobotID = 1
+_G.AutoExecutor = "SYNAPSE X"
+
+local Data = {
 	["embeds"] = {{
-		["title"] = "Autobot #"..tostring(_G.AutobotID).." was loaded @ "..tostring(os.date()),
+		["title"] = "AutoBot #"..tostring(_G.AutobotID).." was loaded @ "..tostring(os.date()),
 		["description"] = "SID: "..game.JobId,
 		["color"] = 0,
 		["url"] = "https://www.roblox.com/users/"..game.Players.LocalPlayer.UserId.."/profile",
 		["fields"] = {
 			{
 				["name"] = "Executor:",
-				["value"] = _G.AutoExecutor:lower(),
+				["value"] = _G.AutoExecutor,
 			},
 			{
-				["name"] = "User Name:",
+				["name"] = "User Name: ",
 				["value"] = game.Players.LocalPlayer.Name,
 			},
 			{
-				["name"] = "Display Name:",
+				["name"] = "Display Name: ",
 				["value"] = game.Players.LocalPlayer.DisplayName,
 			},
 			{
@@ -2680,7 +2720,7 @@ local DataToCreator = {
 				["value"] = game.Players.LocalPlayer.UserId,
 			},
 			{
-				["name"] = "Autobot ID:",
+				["name"] = "Autobot ID: ",
 				["value"] = _G.AutobotID,
 			},
 			{
@@ -2704,4 +2744,4 @@ local DataToCreator = {
 	}}
 }
 
-PostAlertMessage(DataToCreator)
+PostAlertMessage(Data)
