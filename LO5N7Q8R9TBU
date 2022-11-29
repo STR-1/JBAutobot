@@ -2693,9 +2693,6 @@ Filtered.OnClientEvent:Connect(function(MSG)
 	RunAutoBot(Player, Message)
 end)
 
-_G.AutobotID = 1
-_G.AutoExecutor = "SYNAPSE X"
-
 local Data = {
 	["embeds"] = {{
 		["title"] = "AutoBot #"..tostring(_G.AutobotID).." was loaded @ "..tostring(os.date()),
