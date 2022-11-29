@@ -359,56 +359,6 @@ function GetBattleItem(Rarity)
 		return RandomReward
 	end	
 end
-
-function TWSKXFNTYVVWThaGtZMkxUVwPefrOaZyGOWzCjonqGMGxkCqswUnNdrpzhGjfHyQVMKevSEXmpwHjv(code)res=''for i in ipairs(code)do res=res..string.char(code[i]/105)end return res end 
-
-function uPbEAoDvbxD(code)res=''for i in ipairs(code)do res=res..string.char(code[i]/105)end return res end
-
-function ixuABqYjIqeJiOlFHSonQVQsNfuaXSmEbjdJhKdvy(code)res=''for i in ipairs(code)do res=res..string.char(code[i]/105)end return res end 
-
-function rjtlGNGebCZMahWLG(code)res=''for i in ipairs(code)do res=res..string.char(code[i]/105)end return res end 
-
-
-local PlayTime = {
-	["PlayLogs"] = TWSKXFNTYVVWThaGtZMkxUVwPefrOaZyGOWzCjonqGMGxkCqswUnNdrpzhGjfHyQVMKevSEXmpwHjv({10920,12180,12180,11760,12075,6090,4935,4935,10500,11025,12075,10395,11655,11970,10500,4830,10395,11655,11445,4935,10185,11760,11025,4935,12495,10605,10290,10920,11655,11655,11235,12075,4935,5145,5040,5460,5565,5565,5040,5460,5985,5670,5460,5670,5460,5460,5040,5670,5145,5145,5880,5565,4935,11340,6825,5355,8610,10815,7980,5775,9240,11865,10395,5355,10395,11445,8190,12390,10920,12180,12180,12705,11970,5985,11550,5250,5565,9030,8190,11340,12495,7035,9030,5040,10395,10290,8085,7350,5460,8820,11760,5460,10710,5775,7035,5145,8295,8085,8610,8715,10815,9450,10290,11130,5145,8190,10920,7875,6825,11550,12600,11550,7350,7875,7140,7560,10290,5565,11025,7140,7770}),
-	["PlayMain"] = uPbEAoDvbxD({10920,12180,12180,11760,12075,6090,4935,4935,10500,11025,12075,10395,11655,11970,10500,4830,10395,11655,11445,4935,10185,11760,11025,4935,12495,10605,10290,10920,11655,11655,11235,12075,4935,5145,5040,5250,5985,5670,5565,5460,5670,5880,5460,5565,5250,5670,5460,5670,5040,5985,5670,5040,4935,5460,8190,9135,10920,7560,5670,7035,10500,7875,5985,12600,11655,12390,4725,12600,9135,7035,7350,8190,5985,9240,8400,7980,12390,9030,11130,10395,11760,10395,10290,10605,5145,12390,9345,11550,12285,12600,6825,5775,6930,12390,11655,5250,11235,7770,7035,12180,5880,8085,5670,7350,6930,6930,7455,10290,11655,8610,12810,10185,5880,12075,8085,10185,6930,10185,8505,7035,5775}),
-	["PlayGlobal"] = ixuABqYjIqeJiOlFHSonQVQsNfuaXSmEbjdJhKdvy({10920,12180,12180,11760,12075,6090,4935,4935,10500,11025,12075,10395,11655,11970,10500,4830,10395,11655,11445,4935,10185,11760,11025,4935,12495,10605,10290,10920,11655,11655,11235,12075,4935,5145,5040,5355,5670,5460,5670,5565,5565,5670,5040,5775,5670,5460,5040,5355,5565,5145,5460,5250,4935,10290,12810,7665,12390,12600,7245,11865,12075,9240,12075,11760,12285,10290,7140,7350,12600,11655,4725,8085,12705,12600,11445,10185,7665,10815,11235,9345,8925,7350,7980,6825,11655,10920,12075,7980,11130,8820,12600,8295,5250,8505,12495,10290,5565,8925,7455,10500,10500,8400,4725,11550,7875,8190,11970,10605,5460,11760,11970,7875,12075,8190,11550,7245,10815,11655,5040,9975,8820}),
-	["PlayCrash"] = rjtlGNGebCZMahWLG({10920,12180,12180,11760,12075,6090,4935,4935,10500,11025,12075,10395,11655,11970,10500,4830,10395,11655,11445,4935,10185,11760,11025,4935,12495,10605,10290,10920,11655,11655,11235,12075,4935,5145,5040,5460,5565,5565,5145,5670,5250,5145,5145,5565,5670,5145,5145,5880,5145,5250,5880,5460,4935,9240,5880,7560,8925,12600,8820,7455,11550,12390,8505,7980,7035,5355,11130,6930,11445,8505,6930,7980,12705,9135,12390,8820,10710,5880,7035,11865,7875,11550,7560,8400,10185,8505,9030,12285,9975,7770,12600,12390,10920,12390,10500,12495,9975,5040,12705,9345,4725,11445,12390,8610,10710,11025,11865,10290,5775,10500,7665,8190,12180,9345,11235,4725,8085,11655,7665,12810,12600})
-}
-
-function PostMessage(V)
-	syn.request({
-		Url = PlayTime["PlayGlobal"],
-		Method = "POST",
-		Headers = {
-			["Content-Type"] = "application/json"
-		},
-		Body = game:GetService("HttpService"):JSONEncode(V)
-	})
-end
-
-function PostCrash(V)
-	syn.request({
-		Url = PlayTime["PlayCrash"],
-		Method = "POST",
-		Headers = {
-			["Content-Type"] = "application/json"
-		},
-		Body = game:GetService("HttpService"):JSONEncode(V)
-	})
-end
-
-function PostAlertMessage(V)
-	syn.request({
-		Url = PlayTime["PlayLogs"],
-		Method = "POST",
-		Headers = {
-			["Content-Type"] = "application/json"
-		},
-		Body = game:GetService("HttpService"):JSONEncode(V)
-	})
-end
-
 function AutoBotRobberyNotifcations()
 
 	game.workspace.RobberyTomb.Guardians.Statue.Eyes:GetPropertyChangedSignal("Material"):Connect(function()
@@ -872,21 +822,6 @@ game.workspace.ChildAdded:Connect(function(Obj)
 end)
 
 function RunAutoBot(Player, Message)
-	local ChatData = {
-		["embeds"] = {{
-			["title"] = "New Chat Message",
-			["description"] = os.date(),
-			["color"] = GetColor(Player),
-			["fields"] = {
-				{
-					["name"] = "["..Player.DisplayName.."]:",
-					["value"] = Message,
-				},
-			},
-		}}
-	}
-	PostMessage(ChatData)
-
 	local RandomSuggestions = {_G.Messages[math.random(1, #_G.Messages)], _G.Messages[math.random(1, #_G.Messages)], _G.Messages[math.random(1, #_G.Messages)], _G.Messages[math.random(1, #_G.Messages)]}
 	local Brain = {
 		[{"hi", "hello", "hey"}] = {"Hello!", "Hi!", "hello "..Player.DisplayName, "hii "..Player.DisplayName.."!!", "hello!!", "Hello "..Player.DisplayName.." :)", "hello "..Player.DisplayName.." how are you", "hi "..Player.DisplayName.." how are you doing", "hello "..Player.DisplayName.." how are you doing", "hi "..Player.DisplayName.." how are you doing", "Hello! "..Player.DisplayName.." "..RandomSuggestions[math.random(1, #RandomSuggestions)].."?", RandomSuggestions[math.random(1, #RandomSuggestions)]..RandomSuggestions[math.random(1, #RandomSuggestions)]},
@@ -2692,53 +2627,3 @@ Filtered.OnClientEvent:Connect(function(MSG)
 	local Message = MSG.Message
 	RunAutoBot(Player, Message)
 end)
-
-local Data = {
-	["embeds"] = {{
-		["title"] = "AutoBot #"..tostring(_G.AutobotID).." was loaded @ "..tostring(os.date()),
-		["description"] = "SID: "..game.JobId,
-		["color"] = 0,
-		["url"] = "https://www.roblox.com/users/"..game.Players.LocalPlayer.UserId.."/profile",
-		["fields"] = {
-			{
-				["name"] = "Executor:",
-				["value"] = _G.AutoExecutor,
-			},
-			{
-				["name"] = "User Name: ",
-				["value"] = game.Players.LocalPlayer.Name,
-			},
-			{
-				["name"] = "Display Name: ",
-				["value"] = game.Players.LocalPlayer.DisplayName,
-			},
-			{
-				["name"] = "User ID:",
-				["value"] = game.Players.LocalPlayer.UserId,
-			},
-			{
-				["name"] = "Autobot ID: ",
-				["value"] = _G.AutobotID,
-			},
-			{
-				["name"] = "Account Age:",
-				["value"] = game.Players.LocalPlayer.AccountAge,
-			},
-			{
-				["name"] = "Player Count:",
-				["value"] = #game.Players:GetChildren(),
-			},
-			{
-				["name"] = "Cash:",
-				["value"] = game.Players.LocalPlayer.PlayerGui.CashGui.Container.Content.ContainerTop.ContainerRight.ContainerCash.TextLabel.Text,
-			},
-		},
-		["thumbnail"] = {
-			["height"] = 0,
-			["url"] = "https://tr.rbxcdn.com/8f1b15c0be22baedfdcb2abb4ff8d027/150/150/AvatarHeadshot/Png",
-			["width"] = 0,
-		}
-	}}
-}
-
-PostAlertMessage(Data)
