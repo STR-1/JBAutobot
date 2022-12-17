@@ -371,8 +371,8 @@ function AutoBotRobberyNotifcations()
 		end
 	end)
 
-	game.workspace.PowerPlant.Smoke.smoke:GetPropertyChangedSignal("Enabled"):Connect(function()
-		if game.workspace.PowerPlant.Smoke.smoke.Enabled == true then
+	game.workspace.PowerPlant.Smoke.Smoke:GetPropertyChangedSignal("Enabled"):Connect(function()
+		if game.workspace.PowerPlant.Smoke.Smoke.Enabled == true then
 			local plantrobberyopenargs = {
 				[1] = " ".."                                                                                                                                              ".."{SERVER}".. " ".."The Power Plant is open for robbery.",
 				[2] = "All"
@@ -538,8 +538,8 @@ function AutoBotRobberyCountDowns()
 		end
 	end)
 
-	game.workspace.PowerPlant.Smoke.smoke:GetPropertyChangedSignal("Enabled"):Connect(function()
-		if game.workspace.PowerPlant.Smoke.smoke.Enabled == false then
+	game.workspace.PowerPlant.Smoke.Smoke:GetPropertyChangedSignal("Enabled"):Connect(function()
+		if game.workspace.PowerPlant.Smoke.Smoke.Enabled == false then
 
 			_G.PowerStatus = 300
 
