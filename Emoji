@@ -1,4 +1,4 @@
-local Emojis = {
+return {
 "Party1" = "🎊",
 "Party2" = "🎉",
 "SpaceShip" = "🚀",
