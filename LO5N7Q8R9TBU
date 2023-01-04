@@ -2500,7 +2500,7 @@ end
 
 	elseif not table.find(_G.Blacklist, Player.UserId) and Message:lower() == ">buy" then
 		local postad = {
-			[1] = "/w "..Player.Name.." Buy Autobot at dsc.gg/JBAUTOBOT |600 R$ |5$",
+			[1] = "/w "..Player.Name.." Buy Autobot at dsc.gg/JBAUTOBOT |600 R$ |5$ (AUTOBOT PURCHASES ARE BEING DISCONTUINED FEB 1ST 2023, BUY NOW OR NEVER.)",
 			[2] = "All"
 		}
 		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(postad))
