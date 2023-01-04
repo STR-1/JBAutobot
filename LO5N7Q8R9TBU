@@ -1560,33 +1560,6 @@ function RunAutoBot(Player, Message)
             end
             return OldFireserver(self, ...)
         end
-        local LightHouseDoor
-        for i, v in pairs(Doors) do
-            if v:FindFirstChild("Touch") then
-                if v.Touch:IsA("BasePart") then
-                    if (v.Touch.Position - Vector3.new(3366.33, 29.6273, -2663.62)).Magnitude < 20 then
-                        LightHouseDoor = v
-                    end
-                end
-            end
-        end
-        if not LightHouseDoor then
-            return
-        end
-        for i = 1, 5 do
-            local Players = game:GetService("Players")
-            local Player = Players.LocalPlayer
-            if Player.Character then
-                Player.Character:SetPrimaryPartCFrame(LightHouseDoor.Touch.CFrame)
-            end
-            task.wait()
-            if CurrentDoorHash then
-                break
-            end
-        end
-        if not CurrentDoorHash then
-            return
-        end
         for i, v in pairs(Doors) do
             local args = {
                 [1] = CurrentDoorHash,
