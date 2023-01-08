@@ -13,5 +13,6 @@ return {
 ["Check"] = "✅",
 ["ColorWhite"] = "⚪",
 ["ColorRed"] = "🔴",
-["ColorBlue"] = "🔵"
+["ColorBlue"] = "🔵",
+["Lolipop"] = "🍭"
 }
